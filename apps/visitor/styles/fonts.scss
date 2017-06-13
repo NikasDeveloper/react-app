@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'San Francisco';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../fonts/sf.eot');
+    src:
+        url('../fonts/sf.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/sf.woff2') format('woff2'),
+        url('../fonts/sf.woff') format('woff'),
+        url('../fonts/sf.ttf') format('truetype'),
+        url('../fonts/sf.svg') format('svg');
+}
