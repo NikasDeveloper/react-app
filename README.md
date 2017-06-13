@@ -11,7 +11,6 @@ yarn build:dev //second terminal
 ```
 
 ## Next steps:
-- babel 7: upgrade, remove decorator transform
-- browserlist in package.json: babel, autoprefixer, koa serving unsupported
+- babel 7: upgrade and remove decorator transform
+- browserlist in package.json, used by: babel env, autoprefixer and koa to serve unsupported
 - cordova bundle ready with conditional cordova.js (or dedicated chunk?)
-- stylelint: defined in package.json + sass rules, just on original source not on processed
