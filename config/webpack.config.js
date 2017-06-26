@@ -1,6 +1,7 @@
 const config = require('../package.json');
 
 const webpack = require('webpack');
+const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
 const ChunkHashPlugin = require('webpack-chunk-hash');
 const CleanPlugin = require('clean-webpack-plugin');
 const BabiliPlugin = require('babili-webpack-plugin');
@@ -46,16 +47,17 @@ const entriesHtmlBundles = config.bundles.filter(bundle => bundle.htmlInput).map
         chunks,
         template: bundle.htmlInput,
         filename: bundle.htmlOutput,
-        // hash: true <= broken since it uses hash instead of chunkhash (remove chunkhash once fixed)
+        hash: process.env.NODE_ENV === 'development', //broken since it uses hash instead of chunkhash (remove chunkhash once fixed) used on dev for now to not cache
         inject: true,
         cache: true,
     });
     return htmlBundle;
 });
 
+const host = config[process.env.NODE_ENV] && config[process.env.NODE_ENV].host ? config[process.env.NODE_ENV].host.url : config.host.url;
 const openBundles = config.bundles.filter(bundle => bundle.entry).map(bundle => (
     new OpenBrowserPlugin({
-        url: `${config.ssl ? 'https' : 'http'}://${bundle.hostname || 'localhost'}:8080${bundle.baseRoute}`,
+        url: `${host}${bundle.baseRoute}`,
     })
 ));
 
@@ -68,6 +70,7 @@ const webpackConfig = {
     },
     plugins: [
         ...entriesHtmlBundles,
+        new CaseSensitivePlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'manifest'
         }),
@@ -88,6 +91,13 @@ const webpackConfig = {
             ignoreOrder: true,
             allChunks: true,
         }),
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            openAnalyzer: process.env.NODE_ENV === 'production',
+            generateStatsFile: true,
+            reportFilename: 'build/stats.html',
+            statsFilename: 'build/stats.json',
+        }),
         new NotifierPlugin({
             title: config.name,
             contentImage: './logo.svg',
@@ -98,7 +108,7 @@ const webpackConfig = {
     module: {
         rules: [{
             test: /\.(js|mjs)$/i,
-            exclude: /node_modules/,
+            exclude: [/node_modules/],
             use: [{
                 loader: 'babel-loader',
             },{
@@ -163,7 +173,7 @@ const webpackConfig = {
                 },
             }]
         },{
-            test: /\.(json|pwd)$/i,
+            test: /\.(json)$/i,
             use: [{
                 loader: 'json-loader',
             }],
@@ -181,13 +191,6 @@ else {
         ...webpackConfig.plugins,
         new BabiliPlugin(),
         new CompressionPlugin(),
-        new BundleAnalyzerPlugin({
-            analyzerMode: 'static',
-            openAnalyzer: process.env.NODE_ENV === 'production',
-            generateStatsFile: true,
-            reportFilename: 'build/stats.html',
-            statsFilename: 'build/stats.json',
-        }),
     ];
 
     if(config.logo) {

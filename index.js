@@ -1,6 +1,8 @@
 const config = require('./package.json');
 
+const fs = require('fs');
 const http = require('http');
+const https = require('https');
 const koa = require('koa');
 const cors = require('kcors');
 const compress = require('koa-compress')
@@ -15,7 +17,7 @@ const app = new koa();
 app.use(cors());
 app.use(compress());
 app.use(noTrailingSlash());
-// app.use(json({ pretty: true, spaces: 4 }));
+app.use(json({ pretty: true, spaces: 4 }));
 app.use(body({ formLimit: '5mb', jsonLimit: '5mb', strict: false, multipart: true }));
 
 app.use(async (ctx, next) => {
@@ -51,4 +53,12 @@ router.all('*', async ctx => {
 
 app.use(router.routes());
 
-http.createServer(app.callback()).listen(8080);
+http.createServer(app.callback()).listen(config.host.httpPort || 80);
+
+if(config.ssl) {
+    let sslOptions = {
+        key: fs.readFileSync(config.ssl.key),
+        cert: fs.readFileSync(config.ssl.cert),
+    };
+    https.createServer(sslOptions, app.callback()).listen(config.host.httpsPort || 443);
+}
