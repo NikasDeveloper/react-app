@@ -5,6 +5,7 @@ React app ready to be used for any purpose.
 ## Usage
 ```
 git clone git@github.com:damianobarbati/react-simple-app.git
+npm install -g yarn pm2
 yarn install
 yarn serve:dev //first terminal
 yarn build:dev //second terminal

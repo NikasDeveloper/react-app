@@ -6,7 +6,6 @@
     "main": "index.js",
     "author": "Damiano Barbati <damiano.barbati@gmail.com> (http: //github.com/damianobarbati)",
     "scripts": {
-        "pm2": "./node_modules/pm2/bin/pm2",
         "eslint": "./node_modules/eslint/bin/eslint.js **/*.js --ignore-path .gitignore --ignore-pattern **/*.min.js .",
         "stylelint": "./node_modules/stylelint/bin/stylelint.js --ignore-path .gitignore --ignore-pattern **/*.css **/*.scss !**/*.min.css",
         "webpack": "./node_modules/webpack/bin/webpack.js",
@@ -20,10 +19,10 @@
         "build:dev": "NODE_ENV=development yarn webpack -- --config ./config/webpack.config.js --progress --watch",
         "build:stg": "NODE_ENV=staging yarn webpack -- --config ./config/webpack.config.js --progress",
         "build:prod": "NODE_ENV=production yarn webpack -- --config ./config/webpack.config.js --progress",
-        "unserve": "yarn pm2 delete ./config/pm2.config.js && yarn pm2 flush",
-        "serve:dev": "yarn pm2 start ./config/pm2.config.js -- --env development && yarn pm2 logs",
-        "serve:stg": "yarn pm2 start ./config/pm2.config.js -- --env staging && yarn pm2 logs",
-        "serve:prod": "yarn pm2 start ./config/pm2.config.js -- --env production && yarn pm2 logs"
+        "unserve": "pm2 flush && pm2 delete ./config/pm2.config.js && pm2 flush",
+        "serve:dev": "pm2 start ./config/pm2.config.js -- --env development && pm2 logs",
+        "serve:stg": "pm2 start ./config/pm2.config.js -- --env staging && pm2 logs",
+        "serve:prod": "pm2 start ./config/pm2.config.js -- --env production && pm2 logs"
     },
     "browserslist": [
         "chrome 58"
@@ -166,6 +165,11 @@
     "jest": {
         "bail": true
     },
+    "host": {
+        "url": "http://localhost:8080",
+        "hostname": "localhost",
+        "httpPort": 8080
+    },
     "dependencies": {
         "axios": "^0.16.1",
         "kcors": "^2.2.1",
@@ -244,10 +248,5 @@
         "webpack-chunk-hash": "^0.4.0",
         "webpack-notifier": "^1.5.0",
         "webpack-visualizer-plugin": "^0.1.11"
-    },
-    "host": {
-        "url": "http://localhost:8080",
-        "hostname": "localhost",
-        "httpPort": 8080
     }
 }
