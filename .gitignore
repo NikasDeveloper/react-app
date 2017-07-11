@@ -7,7 +7,6 @@ backup/
 coverage/
 vendor/
 uploads/
-pm2/
 *cache*
 *journal
 *.pwd

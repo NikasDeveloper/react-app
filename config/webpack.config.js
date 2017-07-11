@@ -108,7 +108,14 @@ const webpackConfig = {
     module: {
         rules: [{
             test: /\.(js|mjs)$/i,
-            exclude: [/node_modules/],
+            exclude: filename => {
+                if(!filename.includes('node_modules'))
+                    return false;
+                let pattern = filename.includes('@') ? /(.+node_modules\/.+?\/.+?)\/.+/i : /(.+node_modules\/.+?)\/.+/i;
+                const packageFile = filename.replace(pattern, '$1/package.json');
+                const pkg = require(packageFile);
+                return !pkg['jsnext:main'];
+            },
             use: [{
                 loader: 'babel-loader',
             },{
