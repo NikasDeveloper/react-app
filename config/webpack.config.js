@@ -1,6 +1,8 @@
 const pkg = require('../package.json');
 
+const os = require('os');
 const webpack = require('webpack');
+const HappyPack = require('happypack');
 const HtmlIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const HardSourcePlugin = require('hard-source-webpack-plugin');
 const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
@@ -16,6 +18,10 @@ const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
 const postcssAutoprefixer = require('autoprefixer');
+
+const happyThreadPool = HappyPack.ThreadPool({
+    size: os.cpus(1).length - 1,
+});
 
 const entries = pkg.bundles.filter(bundle => bundle.entry).reduce((reduced, bundle) => {
     reduced[`${bundle.name}/${bundle.entryOutputFilename || 'app'}`] = bundle.entry;
@@ -47,7 +53,7 @@ const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).
 
 const dllsReferences = pkg.bundles.filter(bundle => bundle.vendor).map(bundle => (
     new webpack.DllReferencePlugin({
-        manifest: require(`../build/${bundle.name}/vendor.manifest.json`),
+        manifest: `../build/${bundle.name}/vendor.manifest.json`,
         name: `vendor`,
     })
 ));
@@ -58,6 +64,34 @@ const openBundles = pkg.bundles.filter(bundle => bundle.entry).map(bundle => (
         url: `${host}${bundle.baseRoute}`,
     })
 ));
+
+const jsnextMainNotFound = filename => {
+    const packageFile = filename.replace(/(.+node_modules\/)(@.+?\/)?(.+?\/)(?:.+)?/, '$1$2$3package.json');
+    const pkg = require(packageFile);
+    return !pkg['jsnext:main'];
+};
+
+const jsLoaders = [{
+    loader: 'babel-loader',
+    options: {
+        cacheDirectory: true,
+    },
+},{
+    loader: 'string-replace-loader',
+    query: {
+        search: '.+?//@hide$',
+        flags: 'gim',
+        replace: '',
+    },
+}];
+
+const HappyPackJS = new HappyPack({
+    id: 'js',
+    threadPool: happyThreadPool,
+    debug: true,
+    verbose: true,
+    loaders: jsLoaders,
+});
 
 const vendorEntries = pkg.bundles.filter(bundle => bundle.vendor).reduce((reduced, bundle) => {
     reduced[`${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}`] = bundle.vendor;
@@ -93,24 +127,8 @@ const webpackVendorConfig = {
     module: {
         rules: [{
             test: /\.(js|mjs)$/i,
-            exclude: filename => {
-                const packageFile = filename.replace(/(.+node_modules\/)(@.+?\/)?(.+?\/)(?:.+)?/, '$1$2$3package.json');
-                const pkg = require(packageFile);
-                return !pkg['jsnext:main'];
-            },
-            use: [{
-                loader: 'babel-loader',
-                options: {
-                    cacheDirectory: true,
-                },
-            },{
-                loader: 'string-replace-loader',
-                query: {
-                    search: '.+?//@hide$',
-                    flags: 'gim',
-                    replace: '',
-                },
-            }],
+            exclude: jsnextMainNotFound,
+            use: jsLoaders,
         }],
     },
 };
@@ -155,30 +173,16 @@ const webpackConfig = {
             statsFilename: 'build/stats.json',
         }),
         ...openBundles,
+        // HappyPackJS,
     ],
     module: {
         rules: [{
             test: /\.(js|mjs)$/i,
-            exclude: filename => {
-                if(!filename.includes('node_modules') || filename.includes('lodash'))
-                    return false;
-                const packageFile = filename.replace(/(.+node_modules\/)(@.+?\/)?(.+?\/)(?:.+)?/, '$1$2$3package.json');
-                const pkg = require(packageFile);
-                return !pkg['jsnext:main'];
-            },
-            use: [{
-                loader: 'babel-loader',
-                options: {
-                    cacheDirectory: true,
-                },
-            },{
-                loader: 'string-replace-loader',
-                query: {
-                    search: '.+?//@hide$',
-                    flags: 'gim',
-                    replace: '',
-                },
-            }],
+            exclude: jsnextMainNotFound,
+            use: jsLoaders,
+            // use: [{
+            //     loader: 'happypack/loader?id=js',
+            // }],
         },{
             test: /\.(js|mjs)$/i,
             exclude: /node_modules/,
@@ -284,4 +288,7 @@ else {
     }
 }
 
-module.exports = [webpackVendorConfig, webpackConfig];
+module.exports = [
+    webpackVendorConfig,
+    webpackConfig,
+];

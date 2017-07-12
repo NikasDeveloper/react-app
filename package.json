@@ -12,12 +12,9 @@
         "test": "jest --no-cache --coverage",
         "test:watch": "jest --watchAll --no-cache --coverage",
         "labels": "github-set-labels --token `jq -r .github.token ./config/keys.js` --repo $npm_package_name --labels config/labels.json --overwrite",
-        "build:vendor:dev": "NODE_ENV=development webpack --config ./config/webpack.vendor.config.js --progress",
-        "build:vendor:stg": "NODE_ENV=staging webpack --config ./config/webpack.vendor.config.js --progress",
-        "build:vendor:prod": "NODE_ENV=production webpack --config ./config/webpack.vendor.config.js --progress",
-        "build:dev": "yarn build:vendor:dev && NODE_ENV=development webpack --config ./config/webpack.config.js --progress --watch",
-        "build:stg": "yarn build:vendor:stg && NODE_ENV=staging webpack --config ./config/webpack.config.js --progress",
-        "build:prod": "yarn build:vendor:prod && NODE_ENV=production webpack --config ./config/webpack.config.js --progress",
+        "build:dev": "NODE_ENV=development webpack --config ./config/webpack.config.js --progress --watch",
+        "build:stg": "NODE_ENV=staging webpack --config ./config/webpack.config.js --progress",
+        "build:prod": "NODE_ENV=production webpack --config ./config/webpack.config.js --progress",
         "unserve": "pm2 flush && pm2 delete ./config/pm2.config.js && pm2 flush",
         "serve:dev": "pm2 start ./config/pm2.config.js --env development && pm2 logs",
         "serve:stg": "pm2 start ./config/pm2.config.js --env staging && pm2 logs",
@@ -42,7 +39,7 @@
                 "history",
                 "lodash"
             ],
-            "htmlInput": "./apps/visitor/index.html"
+            "htmlInput": "./apps/index.html"
         },
         {
             "name": "user",
@@ -51,9 +48,7 @@
             "vendor": [
                 "redux"
             ],
-            "entryOutputFilename": "app",
-            "vendorOutputFilename": "vendor",
-            "htmlInput": "./apps/user/index.html"
+            "htmlInput": "./apps/index.html"
         },
         {
             "name": "admin",
@@ -64,7 +59,7 @@
                 "redux",
                 "lodash"
             ],
-            "htmlInput": "./apps/admin/index.html"
+            "htmlInput": "./apps/index.html"
         },
         {
             "name": "503",
@@ -179,6 +174,7 @@
     },
     "dependencies": {
         "axios": "^0.16.1",
+        "happypack": "^4.0.0-beta.1",
         "hard-source-webpack-plugin": "^0.4.9",
         "html-webpack-include-assets-plugin": "^0.0.6",
         "kcors": "^2.2.1",
@@ -240,7 +236,7 @@
         "react-router": "^4.1.1",
         "react-router-dom": "^4.1.1",
         "react-router-redux": "next",
-        "recompose": "^0.23.5",
+        "recompose": "^0.24.0",
         "redux": "^3.7.1",
         "redux-promise": "^0.5.3",
         "redux-thunk": "^2.2.0",
