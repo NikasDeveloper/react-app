@@ -1,8 +1,6 @@
 const pkg = require('../package.json');
 
-require('child_process').execSync(`NODE_ENV=${process.env.NODE_ENV} webpack --config ./config/webpack.vendor.config.js --progress `, {
-    stdio: 'inherit',
-});
+// require('child_process').execSync(`NODE_ENV=${process.env.NODE_ENV} webpack --config ./config/webpack.vendor.config.js --progress `);
 
 const happypack = true;
 
@@ -303,4 +301,4 @@ else {
     }
 }
 
-module.exports = webpackConfig;
+module.exports = webpackVendorConfig;
