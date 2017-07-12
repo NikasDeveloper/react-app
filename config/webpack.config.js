@@ -53,7 +53,7 @@ const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).
 
 const dllsReferences = pkg.bundles.filter(bundle => bundle.vendor).map(bundle => (
     new webpack.DllReferencePlugin({
-        manifest: `../build/${bundle.name}/vendor.manifest.json`,
+        manifest: __dirname + `/../build/${bundle.name}/vendor.manifest.json`,
         name: `vendor`,
     })
 ));
@@ -252,6 +252,7 @@ const webpackConfig = {
 if(process.env.NODE_ENV === 'development') {
     webpackVendorConfig.devtool = webpackConfig.devtool = 'cheap-module-eval-sourcemap';
     webpackVendorConfig.output.pathinfo = webpackConfig.output.pathinfo = true;
+    webpackConfig.watch = true;
 }
 else {
     webpackVendorConfig.devtool = webpackConfig.devtool = 'cheap-module-sourcemap';
