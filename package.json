@@ -9,13 +9,15 @@
         "jslint": "eslint **/*.js --ignore-path .gitignore --ignore-pattern **/*.min.js .",
         "csslint": "stylelint **/*.css **/*.scss --ignore-path .gitignore --ignore-pattern **/*.min.css .",
         "docs": "jsdoc -c ./config/jsdoc.json && open docs/index.html",
-        "test": "jest -- --no-cache --coverage",
-        "test:watch": "jest -- --watchAll --no-cache --coverage",
+        "test": "jest --no-cache --coverage",
+        "test:watch": "jest --watchAll --no-cache --coverage",
         "labels": "github-set-labels --token `jq -r .github.token ./config/keys.js` --repo $npm_package_name --labels config/labels.json --overwrite",
-        "build:clean": "rm -rf ./build",
-        "build:dev": "NODE_ENV=development webpack --config ./config/webpack.config.js --progress --watch",
-        "build:stg": "NODE_ENV=staging webpack --config ./config/webpack.config.js --progress",
-        "build:prod": "NODE_ENV=production webpack --config ./config/webpack.config.js --progress",
+        "build:vendor:dev": "NODE_ENV=development webpack --config ./config/webpack.vendor.config.js --progress",
+        "build:vendor:stg": "NODE_ENV=staging webpack --config ./config/webpack.vendor.config.js --progress",
+        "build:vendor:prod": "NODE_ENV=production webpack --config ./config/webpack.vendor.config.js --progress",
+        "build:dev": "yarn build:vendor:dev && NODE_ENV=development webpack --config ./config/webpack.config.js --progress --watch",
+        "build:stg": "yarn build:vendor:stg && NODE_ENV=staging webpack --config ./config/webpack.config.js --progress",
+        "build:prod": "yarn build:vendor:prod && NODE_ENV=production webpack --config ./config/webpack.config.js --progress",
         "unserve": "pm2 flush && pm2 delete ./config/pm2.config.js && pm2 flush",
         "serve:dev": "pm2 start ./config/pm2.config.js --env development && pm2 logs",
         "serve:stg": "pm2 start ./config/pm2.config.js --env staging && pm2 logs",
@@ -31,12 +33,16 @@
             "baseRoute": "/",
             "entry": "./apps/visitor/index.js",
             "vendor": [
+                "react",
+                "react-create-app",
+                "react-create-store",
+                "react-dom",
+                "react-router-redux",
+                "react-router-dom",
+                "history",
                 "lodash"
             ],
-            "entryOutputFilename": "app",
-            "vendorOutputFilename": "vendor",
-            "htmlInput": "./apps/visitor/index.html",
-            "htmlOutput": "./build/visitor/index.html"
+            "htmlInput": "./apps/visitor/index.html"
         },
         {
             "name": "user",
@@ -47,8 +53,7 @@
             ],
             "entryOutputFilename": "app",
             "vendorOutputFilename": "vendor",
-            "htmlInput": "./apps/user/index.html",
-            "htmlOutput": "./build/user/index.html"
+            "htmlInput": "./apps/user/index.html"
         },
         {
             "name": "admin",
@@ -59,29 +64,19 @@
                 "redux",
                 "lodash"
             ],
-            "entryOutputFilename": "app",
-            "vendorOutputFilename": "vendor",
-            "htmlInput": "./apps/admin/index.html",
-            "htmlOutput": "./build/admin/index.html"
+            "htmlInput": "./apps/admin/index.html"
         },
         {
             "name": "503",
             "htmlInput": "./apps/503.html",
-            "htmlOutput": "./build/503.html"
+            "htmlOutputFilename": "./build/503.html"
         }
     ],
     "eslintConfig": {
         "parser": "babel-eslint",
-        "env": {
-            "es6": true,
-            "browser": true,
-            "node": true,
-            "jest": true
-        },
         "parserOptions": {
             "ecmaVersion": 2017,
             "sourceType": "module",
-            "allowImportExportEverywhere": false,
             "impliedStrict": true,
             "ecmaFeatures": {
                 "jsx": true,
@@ -89,6 +84,12 @@
                 "globalReturn": false,
                 "experimentalObjectRestSpread": true
             }
+        },
+        "env": {
+            "browser": true,
+            "node": true,
+            "jest": true,
+            "es6": true
         },
         "plugins": [
             "import",
@@ -102,7 +103,11 @@
         ],
         "rules": {
             "no-console": "off",
-            "no-unused-vars": "off"
+            "no-unused-vars": "off",
+            "no-unsafe-finally": "off",
+            "no-unreachable": "off",
+            "react/no-unescaped-entities": "off",
+            "react/no-children-prop": "off"
         }
     },
     "stylelint": {
@@ -134,7 +139,11 @@
                 {
                     "targets": {
                         "browsers": [
-                            "chrome 58"
+                            "chrome 54",
+                            "safari 9",
+                            "firefox 50",
+                            "edge 12",
+                            "explorer 11"
                         ]
                     },
                     "modules": false,
@@ -170,6 +179,8 @@
     },
     "dependencies": {
         "axios": "^0.16.1",
+        "hard-source-webpack-plugin": "^0.4.9",
+        "html-webpack-include-assets-plugin": "^0.0.6",
         "kcors": "^2.2.1",
         "koa": "^2.3.0",
         "koa-body": "^2.3.0",
@@ -207,7 +218,7 @@
         "eslint-plugin-import": "^2.6.0",
         "eslint-plugin-jest": "^20.0.3",
         "eslint-plugin-react": "^7.1.0",
-        "extract-text-webpack-plugin": "3.0.0-beta.3",
+        "extract-text-webpack-plugin": "^3.0.0",
         "favicons-webpack-plugin": "^0.0.7",
         "file-loader": "^0.11.1",
         "history": "^4.6.3",

@@ -1,6 +1,8 @@
-const config = require('../package.json');
+const pkg = require('../package.json');
 
 const webpack = require('webpack');
+const HtmlIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
+const HardSourcePlugin = require('hard-source-webpack-plugin');
 const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
 const ChunkHashPlugin = require('webpack-chunk-hash');
 const CleanPlugin = require('clean-webpack-plugin');
@@ -15,47 +17,43 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const FaviconsPlugin = require('favicons-webpack-plugin');
 const postcssAutoprefixer = require('autoprefixer');
 
-const entries = config.bundles.reduce((reduced, bundle) => {
-    if(bundle.entry)
-        reduced[`${bundle.name}/${bundle.entryOutputFilename}`] = bundle.entry;
-    if(bundle.vendor)
-        reduced[`${bundle.name}/${bundle.vendorOutputFilename}`] = bundle.vendor;
+const entries = pkg.bundles.filter(bundle => bundle.entry).reduce((reduced, bundle) => {
+    reduced[`${bundle.name}/${bundle.entryOutputFilename || 'app'}`] = bundle.entry;
     return reduced;
 }, {});
 
-const entriesChunks = config.bundles.filter(bundle => bundle.vendor).map(bundle => (
-    new webpack.optimize.CommonsChunkPlugin({
-        name: `${bundle.name}/${bundle.vendorOutputFilename}`,
-        chunks: [`${bundle.name}/${bundle.vendorOutputFilename}`, `${bundle.name}/${bundle.entryOutputFilename}`],
-        minChunks: Infinity,
+const entriesHtmlBundles = pkg.bundles.filter(bundle => bundle.htmlInput).map(bundle => (
+    new HtmlPlugin({
+        title: bundle.name,
+        template: bundle.htmlInput,
+        filename: bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`,
+        inject: true,
+        chunks: [],
     })
 ));
 
-const entriesHtmlBundles = config.bundles.filter(bundle => bundle.htmlInput).map(bundle => {
-    let chunks = [];
+const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).map(bundle => (
+    new HtmlIncludeAssetsPlugin({
+        assets: [
+            `build/${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}.js`,
+            `build/${bundle.name}/${bundle.entryOutputFilename || 'app'}.js`,
+            `build/${bundle.name}/${bundle.entryOutputFilename || 'app'}.css`,
+        ],
+        hash: true,
+        append: true,
+        files: bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`,
+    })
+));
 
-    if(bundle.entry) {
-        chunks.push(`${bundle.name}/${bundle.entryOutputFilename}`);
-    }
-    if(bundle.vendor) {
-        chunks.push(`${bundle.name}/${bundle.vendorOutputFilename}`);
-        chunks.push('manifest');
-    }
+const dlls = pkg.bundles.filter(bundle => bundle.vendor).map(bundle => (
+    new webpack.DllReferencePlugin({
+        manifest: require(`../build/${bundle.name}/vendor.manifest.json`),
+        name: `vendor`,
+    })
+));
 
-    const htmlBundle = new HtmlPlugin({
-        title: bundle.name,
-        chunks,
-        template: bundle.htmlInput,
-        filename: bundle.htmlOutput,
-        hash: process.env.NODE_ENV === 'development', //broken since it uses hash instead of chunkhash (remove chunkhash once fixed) used on dev for now to not cache
-        inject: true,
-        cache: true,
-    });
-    return htmlBundle;
-});
-
-const host = config[process.env.NODE_ENV] && config[process.env.NODE_ENV].host ? config[process.env.NODE_ENV].host.url : config.host.url;
-const openBundles = config.bundles.filter(bundle => bundle.entry).map(bundle => (
+const host = pkg[process.env.NODE_ENV] && pkg[process.env.NODE_ENV].host ? pkg[process.env.NODE_ENV].host.url : pkg.host.url;
+const openBundles = pkg.bundles.filter(bundle => bundle.entry).map(bundle => (
     new OpenBrowserPlugin({
         url: `${host}${bundle.baseRoute}`,
     })
@@ -64,32 +62,34 @@ const openBundles = config.bundles.filter(bundle => bundle.entry).map(bundle => 
 const webpackConfig = {
     entry: entries,
     output: {
-        filename: `build/[name].${process.env.NODE_ENV === 'development' ? '' : '[chunkhash].'}min.js`,
-        chunkFilename: `build/[name].${process.env.NODE_ENV === 'development' ? '' : '[chunkhash].'}min.js`,
+        filename: `build/[name].js`,
         publicPath: '/',
     },
+    resolve: {
+        symlinks: false
+    },
+    profile: true,
     plugins: [
-        ...entriesHtmlBundles,
         new CaseSensitivePlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'manifest'
-        }),
-        ...entriesChunks,
+        new HardSourcePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.EnvironmentPlugin(['NODE_ENV']),
         new ChunkHashPlugin(),
-        new CleanPlugin(['./build'], {
-            root: `${__dirname}/../`,
-            verbose: true
-        }),
-        new StyleLintPlugin(),
+        ...entriesHtmlBundles,
+        ...entriesHtmlBundlesAssets,
+        ...dlls,
         new ExtractTextPlugin({
-            filename: `./build/[name].${process.env.NODE_ENV === 'development' ? '' : '[contenthash].'}min.css`,
+            filename: `./build/[name].css`,
             ignoreOrder: true,
             allChunks: true,
+        }),
+        new NotifierPlugin({
+            title: pkg.name,
+            contentImage: pkg.logo,
+            alwaysNotify: true,
         }),
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
@@ -98,28 +98,23 @@ const webpackConfig = {
             reportFilename: 'build/stats.html',
             statsFilename: 'build/stats.json',
         }),
-        new NotifierPlugin({
-            title: config.name,
-            contentImage: './logo.svg',
-            alwaysNotify: true,
-        }),
         ...openBundles,
     ],
     module: {
         rules: [{
             test: /\.(js|mjs)$/i,
             exclude: filename => {
-                if(!filename.includes('node_modules'))
+                if(!filename.includes('node_modules') || filename.includes('lodash'))
                     return false;
-                let pattern = filename.includes('@') ? /(.+node_modules\/.+?\/.+?)\/.+/i : /(.+node_modules\/.+?)\/.+/i;
-                const packageFile = filename.replace(pattern, '$1/package.json');
+                const packageFile = filename.replace(/(.+node_modules\/)(@.+?\/)?(.+?\/)(?:.+)?/, '$1$2$3package.json');
                 const pkg = require(packageFile);
                 return !pkg['jsnext:main'];
             },
             use: [{
                 loader: 'babel-loader',
-            },{
-                loader: 'eslint-loader',
+                options: {
+                    cacheDirectory: true,
+                },
             },{
                 loader: 'string-replace-loader',
                 query: {
@@ -127,6 +122,12 @@ const webpackConfig = {
                     flags: 'gim',
                     replace: '',
                 },
+            }],
+        },{
+            test: /\.(js|mjs)$/i,
+            exclude: /node_modules/,
+            use: [{
+                loader: 'eslint-loader',
             }],
         },{
             test: /\.(css|scss|sass)$/i,
@@ -145,7 +146,7 @@ const webpackConfig = {
                     loader: 'postcss-loader',
                     options: {
                         plugins: [
-                            postcssAutoprefixer({ browsers: config.browserslist }),
+                            postcssAutoprefixer({ browsers: pkg.browserslist }),
                         ],
                         sourceMap: true,
                     },
@@ -189,10 +190,11 @@ const webpackConfig = {
 };
 
 if(process.env.NODE_ENV === 'development') {
-    webpackConfig.devtool = 'inline-source-map';
+    webpackConfig.devtool = 'cheap-module-eval-sourcemap';
+    webpackConfig.output.pathinfo = true;
 }
 else {
-    webpackConfig.devtool = 'source-map';
+    webpackConfig.devtool = 'cheap-module-sourcemap';
 
     webpackConfig.plugins = [
         ...webpackConfig.plugins,
@@ -200,12 +202,12 @@ else {
         new CompressionPlugin(),
     ];
 
-    if(config.logo) {
+    if(pkg.logo) {
         webpackConfig.plugins = [
             ...webpackConfig.plugins,
             new FaviconsPlugin({
-                title: config.name,
-                logo: config.logo,
+                title: pkg.name,
+                logo: pkg.logo,
                 prefix: 'build/icons/',
                 statsFilename: 'build/icons/stats.json',
                 inject: true,

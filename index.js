@@ -1,4 +1,4 @@
-const config = require('./package.json');
+const pkg = require('./package.json');
 
 const fs = require('fs');
 const http = require('http');
@@ -38,27 +38,26 @@ router.all('/build*', async ctx => {
     await send(ctx, ctx.path, { root: __dirname });
 });
 
-const routedBundles = config.bundles.filter(bundle => ![null, undefined, '/'].includes(bundle.baseRoute));
-for(let bundle of routedBundles) {
-    const bundleRoutes = [bundle.baseRoute, `${bundle.baseRoute}/*`];
-    router.all(bundleRoutes, async ctx => {
-        await send(ctx, bundle.htmlOutput, { root: __dirname });
+const bundles = pkg.bundles.filter(bundle => ![null, undefined, '/'].includes(bundle.baseRoute));
+for(let bundle of bundles) {
+    router.all([bundle.baseRoute, `${bundle.baseRoute}/*`], async ctx => {
+        await send(ctx, bundle.htmlFilename || `./build/${bundle.name}/index.html`, { root: __dirname });
     });
 }
 
-let defaultRoutedBundle = config.bundles.find(bundle => bundle.baseRoute === '/');
+const defaultBundle = pkg.bundles.find(bundle => bundle.baseRoute === '/');
 router.all('*', async ctx => {
-    await send(ctx, defaultRoutedBundle.htmlOutput, { root: __dirname });
+    await send(ctx, defaultBundle.htmlFilename || `./build/${defaultBundle.name}/index.html`, { root: __dirname });
 });
 
 app.use(router.routes());
 
-http.createServer(app.callback()).listen(config.host.httpPort || 80);
+http.createServer(app.callback()).listen(pkg.host.httpPort || 80);
 
-if(config.ssl) {
+if(pkg.ssl) {
     let sslOptions = {
-        key: fs.readFileSync(config.ssl.key),
-        cert: fs.readFileSync(config.ssl.cert),
+        key: fs.readFileSync(pkg.ssl.key),
+        cert: fs.readFileSync(pkg.ssl.cert),
     };
-    https.createServer(sslOptions, app.callback()).listen(config.host.httpsPort || 443);
+    https.createServer(sslOptions, app.callback()).listen(pkg.host.httpsPort || 443);
 }
