@@ -1,10 +1,13 @@
 const pkg = require('../package.json');
 
+const happypack = false;
+
+const path = require("path");
 const os = require('os');
 const webpack = require('webpack');
 const HappyPack = require('happypack');
-const HtmlIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const HardSourcePlugin = require('hard-source-webpack-plugin');
+const HtmlIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
 const ChunkHashPlugin = require('webpack-chunk-hash');
 const CleanPlugin = require('clean-webpack-plugin');
@@ -53,7 +56,7 @@ const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).
 
 const dllsReferences = pkg.bundles.filter(bundle => bundle.vendor).map(bundle => (
     new webpack.DllReferencePlugin({
-        manifest: __dirname + `/../build/${bundle.name}/vendor.manifest.json`,
+        manifest: `./build/${bundle.name}/vendor.manifest.json`,
         name: `vendor`,
     })
 ));
@@ -66,6 +69,8 @@ const openBundles = pkg.bundles.filter(bundle => bundle.entry).map(bundle => (
 ));
 
 const jsnextMainNotFound = filename => {
+    if(!filename.includes('node_modules') || filename.includes('lodash'))
+        return false;
     const packageFile = filename.replace(/(.+node_modules\/)(@.+?\/)?(.+?\/)(?:.+)?/, '$1$2$3package.json');
     const pkg = require(packageFile);
     return !pkg['jsnext:main'];
@@ -85,7 +90,7 @@ const jsLoaders = [{
     },
 }];
 
-const HappyPackJS = new HappyPack({
+const happyPackJS = new HappyPack({
     id: 'js',
     threadPool: happyThreadPool,
     debug: true,
@@ -106,14 +111,18 @@ const dlls = pkg.bundles.filter(bundle => bundle.vendor).map(bundle => (
 ));
 
 const webpackVendorConfig = {
+    name: 'dll',
     entry: vendorEntries,
     output: {
+        publicPath: '/',
+        path: path.resolve("./"),
         filename: `build/[name].js`,
         library: `vendor`,
     },
     profile: true,
     plugins: [
         new CaseSensitivePlugin(),
+        // new HardSourcePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.HashedModuleIdsPlugin(),
@@ -134,10 +143,13 @@ const webpackVendorConfig = {
 };
 
 const webpackConfig = {
+    dependencies: ['dll'],
+    watch: true,
     entry: entries,
     output: {
-        filename: `build/[name].js`,
         publicPath: '/',
+        path: path.resolve('./'),
+        filename: `build/[name].js`,
     },
     resolve: {
         symlinks: false
@@ -172,17 +184,14 @@ const webpackConfig = {
             reportFilename: 'build/stats.html',
             statsFilename: 'build/stats.json',
         }),
+        ...(happypack ? [happyPackJS] : []),
         ...openBundles,
-        // HappyPackJS,
     ],
     module: {
         rules: [{
             test: /\.(js|mjs)$/i,
             exclude: jsnextMainNotFound,
-            use: jsLoaders,
-            // use: [{
-            //     loader: 'happypack/loader?id=js',
-            // }],
+            use: [ ...(happypack ? [{ loader: 'happypack/loader?id=js' }] : jsLoaders) ],
         },{
             test: /\.(js|mjs)$/i,
             exclude: /node_modules/,
@@ -246,7 +255,11 @@ const webpackConfig = {
                 loader: 'json-loader',
             }],
         }],
-    }
+    },
+    devServer: {
+        port: 8081,
+        proxy: { '*': 'http://localhost:8080' },
+    },
 };
 
 if(process.env.NODE_ENV === 'development') {
