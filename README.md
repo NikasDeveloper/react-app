@@ -51,7 +51,7 @@ const happypack = false;
 ```
 If it works then revert to:
 ```
-const happypack = false;
+const happypack = true;
 ```
 And try to build again.
 Don't ask me why :|
