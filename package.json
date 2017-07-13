@@ -30,6 +30,8 @@
             "baseRoute": "/",
             "entry": "./apps/visitor/index.js",
             "vendor": [
+                "axios",
+                "classnames",
                 "react",
                 "react-create-app",
                 "react-create-store",
@@ -37,7 +39,11 @@
                 "react-router-redux",
                 "react-router-dom",
                 "history",
-                "lodash"
+                "lodash-es",
+                "jss",
+                "react-jss",
+                "jss-preset-default",
+                "normalize-jss"
             ],
             "htmlInput": "./apps/index.html"
         },
@@ -48,18 +54,31 @@
             "vendor": [
                 "redux"
             ],
-            "htmlInput": "./apps/index.html"
+            "htmlInput": "./apps/index.html",
+            "cssoOutputFilename": null
         },
         {
             "name": "admin",
             "baseRoute": "/admin",
             "entry": "./apps/admin/index.js",
             "vendor": [
+                "axios",
+                "classnames",
                 "react",
-                "redux",
-                "lodash"
+                "react-create-app",
+                "react-create-store",
+                "react-dom",
+                "react-router-redux",
+                "react-router-dom",
+                "history",
+                "lodash-es",
+                "jss",
+                "react-jss",
+                "jss-preset-default",
+                "normalize-jss"
             ],
-            "htmlInput": "./apps/index.html"
+            "htmlInput": "./apps/index.html",
+            "cssoOutputFilename": null
         },
         {
             "name": "503",
@@ -183,11 +202,17 @@
         "koa-router": "^7.2.1",
         "koa-send": "^4.1.0",
         "lodash": "^4.17.4",
-        "node-sass": "^4.5.3",
         "pm2": "^2.5.0",
         "yargs": "^8.0.2"
     },
     "devDependencies": {
+        "classnames": "^2.2.5",
+        "jss": "^8.1.0",
+        "jss-preset-default": "^3.0.0",
+        "jss-vendor-prefixer": "^6.0.0",
+        "node-sass": "^4.5.3",
+        "normalize-jss": "^3.1.0",
+        "react-jss": "^6.1.1",
         "autobind-decorator": "^2.0.0",
         "babel-eslint": "^7.2.3",
         "babel-jest": "^20.0.0",

@@ -44,7 +44,7 @@ const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).
         assets: [
             `build/${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}.js`,
             `build/${bundle.name}/${bundle.entryOutputFilename || 'app'}.js`,
-            `build/${bundle.name}/${bundle.entryOutputFilename || 'app'}.css`,
+            ...(![null, false].includes(bundle.cssoOutputFilename) ? [`build/${bundle.name}/${bundle.entryOutputFilename || 'app'}.css`] : []),
         ],
         hash: true,
         append: true,
@@ -154,7 +154,6 @@ const webpackConfig = {
     },
     profile: true,
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
         new CaseSensitivePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NamedModulesPlugin(),
