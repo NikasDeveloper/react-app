@@ -44,6 +44,18 @@ Defining your app logo in the `package.json` will trigger favicon automatic gene
 "logo": "./logo.svg",
 ```
 
+## Gotchas
+If webpack throws a weird error try the following in the webpack.config.js:
+```
+const happypack = false;
+```
+If it works then revert to:
+```
+const happypack = false;
+```
+And try to build again.
+Don't ask me why :|
+
 ## Next steps:
 - babel 7: upgrade and remove decorator transform
 - browserlist in package.json, used by: babel env, autoprefixer and koa to serve unsupported
