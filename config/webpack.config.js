@@ -25,7 +25,7 @@ const happyThreadPool = HappyPack.ThreadPool({
 });
 
 const entries = pkg.bundles.filter(bundle => bundle.entry).reduce((reduced, bundle) => {
-    reduced[`${bundle.name}/${bundle.entryOutputFilename || 'app'}`] = bundle.entry;
+    reduced[`${bundle.name}/${bundle.bundleOutputFilename || 'app'}`] = bundle.entry;
     return reduced;
 }, {});
 
@@ -43,8 +43,8 @@ const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).
     new HtmlIncludeAssetsPlugin({
         assets: [
             `build/${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}.js`,
-            `build/${bundle.name}/${bundle.entryOutputFilename || 'app'}.js`,
-            ...(![null, false].includes(bundle.cssoOutputFilename) ? [`build/${bundle.name}/${bundle.entryOutputFilename || 'app'}.css`] : []),
+            `build/${bundle.name}/${bundle.bundleOutputFilename || 'app'}.js`,
+            ...(![null, false].includes(bundle.cssOutputFilename) ? [`build/${bundle.name}/${bundle.bundleOutputFilename || (bundle.cssOutputFilename || 'app')}.css`] : []),
         ],
         hash: true,
         append: true,

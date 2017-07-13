@@ -55,7 +55,7 @@
                 "redux"
             ],
             "htmlInput": "./apps/index.html",
-            "cssoOutputFilename": null
+            "cssOutputFilename": null
         },
         {
             "name": "admin",
