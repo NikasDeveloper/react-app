@@ -1,11 +1,5 @@
 const pkg = require('../package.json');
 
-require('child_process').execSync(`NODE_ENV=${process.env.NODE_ENV} webpack --config ./config/webpack.vendor.config.js --progress `, {
-    stdio: 'inherit',
-});
-
-const happypack = true;
-
 const path = require("path");
 const os = require('os');
 const webpack = require('webpack');
@@ -23,6 +17,8 @@ const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
 const postcssAutoprefixer = require('autoprefixer');
+
+const happypack = true;
 
 const happyThreadPool = HappyPack.ThreadPool({
     size: os.cpus(1).length - 1,
@@ -257,10 +253,6 @@ const webpackConfig = {
             }],
         }],
     },
-    devServer: {
-        port: 8081,
-        proxy: { '*': 'http://localhost:8080' },
-    },
 };
 
 if(process.env.NODE_ENV === 'development') {
@@ -303,4 +295,4 @@ else {
     }
 }
 
-module.exports = webpackConfig;
+module.exports = [webpackVendorConfig, webpackConfig];
