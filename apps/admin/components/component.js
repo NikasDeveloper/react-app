@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import withStyle from '../withStyle';
+import withStyle from 'react-jss';
 
 const styles = {
     '@global': {
@@ -28,6 +28,6 @@ export default class Component1 extends React.Component {
             <div>
                 <h1 className={classNames(classes.root)}>Admin with custom jss!</h1>
             </div>
-        )
+        );
     }
 }
