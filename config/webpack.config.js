@@ -1,6 +1,5 @@
 const pkg = require('../package.json');
-
-const path = require("path");
+const path = require('path');
 const os = require('os');
 const webpack = require('webpack');
 const HappyPack = require('happypack');
@@ -9,7 +8,7 @@ const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 const BabiliPlugin = require('babili-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
+// const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
@@ -173,13 +172,6 @@ const webpackConfig = {
             contentImage: pkg.logo,
             alwaysNotify: true,
         }),
-        new BundleAnalyzerPlugin({
-            analyzerMode: 'static',
-            openAnalyzer: process.env.NODE_ENV === 'production',
-            generateStatsFile: true,
-            reportFilename: 'build/stats.html',
-            statsFilename: 'build/stats.json',
-        }),
         ...(happypack ? [happyPackJS] : []),
         ...openBundles,
     ],
@@ -266,12 +258,13 @@ else {
         ...webpackVendorConfig.plugins,
         new BabiliPlugin(),
         new CompressionPlugin(),
-    ];
-
-    webpackConfig.plugins = [
-        ...webpackConfig.plugins,
-        new BabiliPlugin(),
-        new CompressionPlugin(),
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            openAnalyzer: process.env.NODE_ENV === 'production',
+            generateStatsFile: true,
+            reportFilename: 'build/stats.html',
+            statsFilename: 'build/stats.json',
+        }),
     ];
 
     if(pkg.logo) {

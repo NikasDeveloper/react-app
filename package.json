@@ -52,7 +52,20 @@
             "baseRoute": "/user",
             "entry": "./apps/user/index.js",
             "vendor": [
-                "redux"
+                "@damianobarbati/jss-reset",
+                "classnames",
+                "react",
+                "react-create-app",
+                "react-create-store",
+                "react-dom",
+                "react-router-redux",
+                "react-router-dom",
+                "history",
+                "lodash-es",
+                "jss",
+                "react-jss",
+                "jss-preset-default",
+                "jss-theme-reactor"
             ],
             "htmlInput": "./apps/index.html",
             "cssOutputFilename": null
@@ -189,6 +202,7 @@
     },
     "dependencies": {
         "axios": "^0.16.1",
+        "jss-theme-reactor": "^0.11.1",
         "kcors": "^2.2.1",
         "koa": "^2.3.0",
         "koa-body": "^2.3.0",
@@ -261,10 +275,10 @@
         "sass-loader": "^6.0.5",
         "string-replace-loader": "^1.2.0",
         "style-loader": "^0.18.2",
-        "stylelint-config-sass-guidelines": "^2.1.0",
+        "stylelint-config-sass-guidelines": "^3.0.0-rc.1",
         "stylelint-config-standard": "^17.0.0",
         "stylelint-scss": "^1.4.4",
-        "stylelint-webpack-plugin": "^0.8.0",
+        "stylelint-webpack-plugin": "^0.9.0",
         "url-loader": "^0.5.9",
         "webpack": "^3.3.0",
         "webpack-bundle-analyzer": "^2.8.2",

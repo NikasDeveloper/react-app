@@ -1,24 +1,15 @@
-import { createStore } from 'redux'
-import img from '../../logo.svg';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import createStore from 'react-create-store';
+import createApp from 'react-create-app';
+import * as reducers from './reducers';
+import Router, { history } from './router';
+import { JssProvider } from 'react-jss';
+import { jss } from './style';
 
-function todos(state = [], action) {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return state.concat([ action.text ])
-    default:
-      return state
-  }
-}
+const development = process.env.NODE_ENV === 'development';
 
-let store = createStore(todos, [ 'Use Redux' ])
+const store = createStore({ reducers, history, verbose: development });
+const App = createApp({ store, Router, history, persistWhitelist: ['auth', 'database'] });
 
-store.dispatch({
-  type: 'ADD_TODO',
-  text: 'Read the docs'
-})
-
-console.log(store.getState())
-// [ 'Use Redux', 'Read the docs' ]
-
-document.write('user');
-console.log(img);
+ReactDOM.render(<JssProvider jss={jss}><App /></JssProvider>, document.getElementById('app'));
