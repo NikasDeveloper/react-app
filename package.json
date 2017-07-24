@@ -16,9 +16,9 @@
         "build:stg": "NODE_ENV=staging webpack --config ./config/webpack.config.js --progress",
         "build:prod": "NODE_ENV=production webpack --config ./config/webpack.config.js --progress",
         "unserve": "pm2 flush && pm2 delete ./config/pm2.config.js && pm2 flush",
-        "serve:dev": "pm2 start ./config/pm2.config.js --env development && pm2 logs",
-        "serve:stg": "pm2 start ./config/pm2.config.js --env staging && pm2 logs",
-        "serve:prod": "pm2 start ./config/pm2.config.js --env production && pm2 logs"
+        "serve:dev": "pm2 start ./config/pm2.config.js --env development",
+        "serve:stg": "pm2 start ./config/pm2.config.js --env staging",
+        "serve:prod": "pm2 start ./config/pm2.config.js --env production"
     },
     "browserslist": [
         "chrome 58"
@@ -250,7 +250,7 @@
         "html-webpack-plugin": "^2.29.0",
         "img-loader": "^2.0.0",
         "jest": "^20.0.4",
-        "json-loader": "^0.5.4",
+        "json-loader": "^0.5.7",
         "jss": "^8.1.0",
         "jss-preset-default": "^3.0.0",
         "lodash-es": "^4.17.4",
@@ -275,14 +275,13 @@
         "sass-loader": "^6.0.5",
         "string-replace-loader": "^1.2.0",
         "style-loader": "^0.18.2",
-        "stylelint-config-sass-guidelines": "^3.0.0-rc.1",
+        "stylelint-config-sass-guidelines": "^3.0.1",
         "stylelint-config-standard": "^17.0.0",
         "stylelint-scss": "^1.4.4",
         "stylelint-webpack-plugin": "^0.9.0",
         "url-loader": "^0.5.9",
         "webpack": "^3.3.0",
         "webpack-bundle-analyzer": "^2.8.2",
-        "webpack-notifier": "^1.5.0",
-        "webpack-visualizer-plugin": "^0.1.11"
+        "webpack-notifier": "^1.5.0"
     }
 }

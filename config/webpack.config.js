@@ -112,7 +112,7 @@ const webpackVendorConfig = {
     entry: vendorEntries,
     output: {
         publicPath: '/',
-        path: path.resolve("./"),
+        path: path.resolve('./'),
         filename: `build/[name].js`,
         library: `vendor`,
     },
@@ -159,6 +159,7 @@ const webpackConfig = {
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.EnvironmentPlugin(['NODE_ENV']),
+        // new StyleLintPlugin(),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
         ...dllsReferences,
@@ -256,6 +257,19 @@ else {
 
     webpackVendorConfig.plugins = [
         ...webpackVendorConfig.plugins,
+        new BabiliPlugin(),
+        new CompressionPlugin(),
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            openAnalyzer: process.env.NODE_ENV === 'production',
+            generateStatsFile: true,
+            reportFilename: 'build/vendor-stats.html',
+            statsFilename: 'build/vendor-stats.json',
+        }),
+    ];
+
+    webpackConfig.plugins = [
+        ...webpackConfig.plugins,
         new BabiliPlugin(),
         new CompressionPlugin(),
         new BundleAnalyzerPlugin({
