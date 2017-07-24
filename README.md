@@ -44,6 +44,16 @@ Defining your app logo in the `package.json` will trigger favicon automatic gene
 "logo": "./logo.svg",
 ```
 
+## Cordova
+```
+cordova create hello com.example.hello HelloWorld
+cordova platform add ios browser android
+cordova plugin add cordova.plugins.diagnostic cordova-plugin-globalization cordova-plugin-device
+#cordova-plugin-camera cordova-plugin-geolocation cordova-plugin-statusbar cordova-plugin-dialogs cordova-plugin-contacts cordova-plugin-media
+cd platforms/ios/cordova/node_modules/ && npm install ios-sim@latest && cd ../../../../
+cordova build ios && cordova emulate ios
+```
+
 ## Gotchas
 If webpack throws a weird error try the following in the webpack.config.js:
 ```
