@@ -15,4 +15,11 @@ const store = createStore({ reducers, history, verbose: development });
 
 const App = createApp({ store, Router, history, persistWhitelist: ['auth', 'database'] });
 
-ReactDOM.render(<App />, document.getElementById('app'));
+const bootstrap = () => {
+    ReactDOM.render(<App />, document.getElementById('app'));
+};
+
+if(!window.cordova)
+    bootstrap();
+else
+    document.addEventListener('deviceready', bootstrap, false);

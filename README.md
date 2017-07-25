@@ -7,9 +7,8 @@ React app ready to be used for any purpose.
 git clone git@github.com:damianobarbati/react-simple-app.git
 npm install -g yarn pm2
 yarn install
-yarn serve:dev //first terminal
-yarn build:dev //second terminal to develop
-yarn build:prod //second terminal to build for production
+yarn serve:dev
+yarn build:dev //or yarn build:prod to build for production
 ```
 
 Define your bundles in the `package.json`.
@@ -48,7 +47,8 @@ Defining your app logo in the `package.json` will trigger favicon automatic gene
 ```
 cordova create hello com.example.hello HelloWorld
 cordova platform add ios browser android
-cordova plugin add cordova.plugins.diagnostic cordova-plugin-globalization cordova-plugin-device
+cordova plugin add cordova-plugin-statusbar # some plugins prevent deviceready!
+# cordova.plugins.diagnostic cordova-plugin-globalization cordova-plugin-device
 #cordova-plugin-camera cordova-plugin-geolocation cordova-plugin-statusbar cordova-plugin-dialogs cordova-plugin-contacts cordova-plugin-media
 cd platforms/ios/cordova/node_modules/ && npm install ios-sim@latest && cd ../../../../
 cordova build ios && cordova emulate ios
