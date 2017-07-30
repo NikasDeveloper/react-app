@@ -30,10 +30,6 @@ app.use(async (ctx, next) => {
     }
 });
 
-router.all('/ciao', async ctx => {
-    ctx.body = null;
-});
-
 router.all('/build*', async ctx => {
     await send(ctx, ctx.path, { root: __dirname });
 });
@@ -41,13 +37,13 @@ router.all('/build*', async ctx => {
 const bundles = pkg.bundles.filter(bundle => ![null, undefined, '/'].includes(bundle.baseRoute));
 for(let bundle of bundles) {
     router.all([bundle.baseRoute, `${bundle.baseRoute}/*`], async ctx => {
-        await send(ctx, bundle.htmlFilename || `./build/${bundle.name}/index.html`, { root: __dirname });
+        await send(ctx, bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`, { root: __dirname });
     });
 }
 
 const defaultBundle = pkg.bundles.find(bundle => bundle.baseRoute === '/');
 router.all('*', async ctx => {
-    await send(ctx, defaultBundle.htmlFilename || `./build/${defaultBundle.name}/index.html`, { root: __dirname });
+    await send(ctx, defaultBundle.htmlOutputFilename || `./build/${defaultBundle.name}/index.html`, { root: __dirname });
 });
 
 app.use(router.routes());
