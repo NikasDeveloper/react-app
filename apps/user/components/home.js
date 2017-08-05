@@ -29,7 +29,10 @@ export default class Home extends React.Component {
         const { dispatch, location, classes } = this.props;
 
         return (
-            <h1 className={cx(classes.root)} >Home</h1>
+            <div>
+                <h1 className={cx(classes.root)}>Home</h1>
+                <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Big_Bear_Valley%2C_California.jpg/1200px-Big_Bear_Valley%2C_California.jpg'} />
+            </div>
         );
     }
 }
