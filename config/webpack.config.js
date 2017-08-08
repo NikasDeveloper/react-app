@@ -204,7 +204,15 @@ const webpackConfig = {
                 loader: 'eslint-loader',
             }],
         },{
+            test: /plugin\.css$/,
+            use: [{
+                loader: 'style-loader',
+            },{
+                loader: 'css-loader',
+            }],
+        },{
             test: /\.(css|scss|sass)$/i,
+            exclude: /plugin\.css$/,
             loader: ExtractTextPlugin.extract({
                 use: [{
                     loader: 'css-loader',
