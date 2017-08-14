@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { push } from 'react-router-redux';
-import {} from 'lodash-es';
-import cx from 'classnames';
 import injectSheet from 'react-jss'
+import cx from 'classnames';
 
 @withRouter
 @injectSheet(theme => ({
@@ -25,8 +23,13 @@ export default class List extends React.Component {
         classes: PropTypes.object.isRequired,
     }
 
+    componentWillMount () {
+        console.log('mounting', this);
+    }
+
     render () {
         const { dispatch, location, classes } = this.props;
+        console.log('list', classes);
 
         return (
             <h1 className={cx(classes.root)}>List</h1>

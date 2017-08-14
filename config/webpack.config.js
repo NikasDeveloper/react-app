@@ -37,7 +37,7 @@ const entriesHtmlBundles = pkg.bundles.filter(bundle => bundle.htmlInput).map(bu
     })
 ));
 
-const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).map(bundle => (
+const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput && bundle.entry).map(bundle => (
     new HtmlIncludeAssetsPlugin({
         assets: [
             `build/${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}.js`,
@@ -88,7 +88,6 @@ const jsLoaders = [{
 const cordovaBuilds = pkg.bundles.filter(bundle => bundle.cordova).map(bundle => {
     const htmlOutputFilename = bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`;
     const build = `sh config/cordova.sh ${bundle.cordova} ${htmlOutputFilename}`;
-    console.log(build);
     return build;
 });
 

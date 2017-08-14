@@ -6403,16 +6403,16 @@ rc@^1.1.2, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-create-app@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-create-app/-/react-create-app-2.0.0.tgz#25fbef4a773d61571013f7f8b2a085ee89b2a1bb"
+react-create-app@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-create-app/-/react-create-app-2.0.1.tgz#6bd0a87b6b49cb408b4f8a10321504f1c62bb44f"
   dependencies:
     redux-persist "^4.8.0"
     redux-persist-crosstab "^3.5.3"
 
-react-create-store@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-create-store/-/react-create-store-2.0.0.tgz#eacef718d1bde3401a623376e5e56be5ae035ddc"
+react-create-store@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-create-store/-/react-create-store-2.0.1.tgz#6b28291f5b047f53caf759da1f030e8c532b1b62"
   dependencies:
     redux-action-buffer "^1.0.1"
     redux-devtools-extension "^2.13.2"

@@ -5,9 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { NavLink } from 'react-router-dom'
 import { push } from 'react-router-redux';
-import {} from 'lodash-es';
-import cx from 'classnames';
 import injectSheet from 'react-jss'
+import cx from 'classnames';
 
 @withRouter
 @injectSheet(theme => ({

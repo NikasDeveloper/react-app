@@ -5,9 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 import { RouteTransition, presets } from 'react-router-transition';
-import {} from 'lodash-es';
-import cx from 'classnames';
 import injectSheet from 'react-jss'
+import cx from 'classnames';
 
 import Nav from './nav';
 
