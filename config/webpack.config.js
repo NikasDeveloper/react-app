@@ -8,7 +8,6 @@ const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 const BabiliPlugin = require('babili-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
@@ -16,7 +15,6 @@ const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
 const ShellPlugin = require('webpack-shell-plugin');
-const postcssAutoprefixer = require('autoprefixer');
 
 const happypack = true;
 
@@ -44,7 +42,6 @@ const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput).
         assets: [
             `build/${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}.js`,
             `build/${bundle.name}/${bundle.bundleOutputFilename || 'app'}.js`,
-            ...(![null, false].includes(bundle.cssOutputFilename) ? [`build/${bundle.name}/${bundle.bundleOutputFilename || (bundle.cssOutputFilename || 'app')}.css`] : []),
         ],
         hash: true,
         append: true,
@@ -175,15 +172,9 @@ const webpackConfig = {
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.EnvironmentPlugin(['NODE_ENV']),
-        new StyleLintPlugin(),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
         ...dllsReferences,
-        new ExtractTextPlugin({
-            filename: `./build/[name].css`,
-            ignoreOrder: true,
-            allChunks: true,
-        }),
         new NotifierPlugin({
             title: pkg.name,
             contentImage: pkg.logo,
@@ -212,35 +203,6 @@ const webpackConfig = {
             use: [{
                 loader: 'eslint-loader',
             }],
-        },{
-            test: /\.(css|scss|sass)$/i,
-            exclude: /plugin\.css$/,
-            loader: ExtractTextPlugin.extract({
-                use: [{
-                    loader: 'css-loader',
-                    options: {
-                        modules: true,
-                        importLoaders: 2,
-                        camelCase: true,
-                        localIdentName: '[name]-[local]',
-                        minimize: process.env.NODE_ENV === 'development' ? false : { presets: 'default' },
-                        sourceMap: true,
-                    },
-                },{
-                    loader: 'postcss-loader',
-                    options: {
-                        plugins: [
-                            postcssAutoprefixer({ browsers: pkg.browserslist }),
-                        ],
-                        sourceMap: true,
-                    },
-                },{
-                    loader: 'sass-loader',
-                    options: {
-                        sourceMap: true,
-                    },
-                }]
-            }),
         },{
             test: /\.(woff|woff2|ttf|eot)$/i,
             use: [{
