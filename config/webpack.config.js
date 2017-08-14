@@ -15,6 +15,7 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
+const ShellPlugin = require('webpack-shell-plugin');
 const postcssAutoprefixer = require('autoprefixer');
 
 const happypack = true;
@@ -86,6 +87,13 @@ const jsLoaders = [{
         replace: '',
     },
 }];
+
+const cordovaBuilds = pkg.bundles.filter(bundle => bundle.cordova).map(bundle => {
+    const htmlOutputFilename = bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`;
+    const build = `sh config/cordova.sh ${bundle.cordova} ${htmlOutputFilename}`;
+    console.log(build);
+    return build;
+});
 
 const happyPackJS = new HappyPack({
     id: 'js',
@@ -191,6 +199,7 @@ const webpackConfig = {
             statsFilename: 'build/stats.json',
         }),
         ...openBundles,
+        new ShellPlugin({ onBuildEnd: cordovaBuilds }),
     ],
     module: {
         rules: [{
@@ -202,13 +211,6 @@ const webpackConfig = {
             exclude: /node_modules/,
             use: [{
                 loader: 'eslint-loader',
-            }],
-        },{
-            test: /plugin\.css$/,
-            use: [{
-                loader: 'style-loader',
-            },{
-                loader: 'css-loader',
             }],
         },{
             test: /\.(css|scss|sass)$/i,
