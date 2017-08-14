@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { push } from 'react-router-redux';
-import {} from 'lodash-es';
-import cx from 'classnames';
 import injectSheet from 'react-jss'
+import cx from 'classnames';
 
 @withRouter
 @injectSheet(theme => ({
@@ -26,12 +24,12 @@ export default class Home extends React.Component {
     }
 
     componentWillMount () {
-        console.log('mounting', this);
+        console.log('mounting home');
     }
 
     render () {
         const { dispatch, location, classes } = this.props;
-        console.log('home', classes);
+        console.log('rendering home');
 
         return (
             <div>

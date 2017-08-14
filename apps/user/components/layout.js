@@ -9,6 +9,7 @@ import injectSheet from 'react-jss'
 import cx from 'classnames';
 
 import Nav from './nav';
+import Transition from './transition';
 
 @withRouter
 @injectSheet(theme => ({
@@ -34,19 +35,14 @@ export default class Layout extends React.Component {
     }
 
     render () {
-        const { children, history, classes } = this.props;
-        const { action } = history;
-
-        const animation = action === 'PUSH' ? presets.slideLeft : presets.slideRight;
+        const { children } = this.props;
 
         return (
             <div>
                 <Nav />
-                <RouteTransition pathname={location.pathname} component={false} {...animation} runOnMount={false} className={cx(classes.transitionContainer)}>
-                    <div className={cx(classes.transitionedViewContainer)}>
-                        {children}
-                    </div>
-                </RouteTransition>
+                <Transition>
+                    {children}
+                </Transition>
             </div>
         );
     }

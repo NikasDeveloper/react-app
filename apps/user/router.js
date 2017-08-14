@@ -16,12 +16,12 @@ export default class Router extends React.Component {
         return (
             <ConnectedRouter history={history}>
                 <ThemeProvider theme={theme}>
-                    <Layout>
-                        <Switch>
+                    <Switch>
+                        <Layout>
                             <Route exact path="/" component={Home} />
                             <Route exact path="/list" component={List} />
-                        </Switch>
-                    </Layout>
+                        </Layout>
+                    </Switch>
                 </ThemeProvider>
             </ConnectedRouter>
         );

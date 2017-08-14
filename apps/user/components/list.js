@@ -24,15 +24,17 @@ export default class List extends React.Component {
     }
 
     componentWillMount () {
-        console.log('mounting', this);
+        console.log('mounting list');
     }
 
     render () {
         const { dispatch, location, classes } = this.props;
-        console.log('list', classes);
+        console.log('rendering list');
 
         return (
-            <h1 className={cx(classes.root)}>List</h1>
+            <div>
+                <h1 className={cx(classes.root)}>List</h1>
+            </div>
         );
     }
 }
