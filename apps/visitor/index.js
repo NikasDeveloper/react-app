@@ -12,7 +12,7 @@ import Router, { history } from './router';
 
 const development = process.env.NODE_ENV == 'development';
 
-const store = createStore({ reducers, history, verbose: development });
+const store = createStore({ reducers, history, verbose: development, loggerCollapsed: true });
 const App = createApp({ store, Router, history, persistWhitelist: ['auth', 'database'] });
 
 jss.createStyleSheet(reset).attach();

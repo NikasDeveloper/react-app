@@ -25,7 +25,7 @@ import Nav from './nav';
 @connect((state, props) => ({ }))
 export default class Layout extends React.Component {
     static propTypes = {
-        children: PropTypes.element.isRequired,
+        children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
         dispatch: PropTypes.func.isRequired,
         location: PropTypes.object.isRequired,
         match: PropTypes.object.isRequired,
@@ -42,7 +42,7 @@ export default class Layout extends React.Component {
         return (
             <div>
                 <Nav />
-                <RouteTransition pathname={location.pathname} {...animation} className={cx(classes.transitionContainer)}>
+                <RouteTransition pathname={location.pathname} component={false} {...animation} runOnMount={false} className={cx(classes.transitionContainer)}>
                     <div className={cx(classes.transitionedViewContainer)}>
                         {children}
                     </div>
