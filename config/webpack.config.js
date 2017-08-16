@@ -6,9 +6,9 @@ const HappyPack = require('happypack');
 const HtmlIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
-const BabiliPlugin = require('babili-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const BabelMinifyPlugin = require('babili-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const NotifierPlugin = require('webpack-notifier');
@@ -161,6 +161,8 @@ const webpackConfig = {
         filename: `build/[name].js`,
     },
     resolve: {
+        //modules: ['node_modules', path.resolve(__dirname, '../', 'node_modules')],
+        //extensions: ['.js', '.mjs', '.json', '.*'],
         symlinks: false
     },
     profile: true,
@@ -244,13 +246,13 @@ else {
 
     webpackVendorConfig.plugins = [
         ...webpackVendorConfig.plugins,
-        new BabiliPlugin(),
+        new BabelMinifyPlugin(),
         new CompressionPlugin(),
     ];
 
     webpackConfig.plugins = [
         ...webpackConfig.plugins,
-        new BabiliPlugin(),
+        new BabelMinifyPlugin(),
         new CompressionPlugin(),
     ];
 

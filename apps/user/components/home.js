@@ -27,6 +27,10 @@ export default class Home extends React.Component {
         console.log('mounting home');
     }
 
+    componentWillUnmount () {
+        console.log('unmounting home');
+    }
+
     render () {
         const { dispatch, location, classes } = this.props;
         console.log('rendering home');

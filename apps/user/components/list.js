@@ -27,6 +27,10 @@ export default class List extends React.Component {
         console.log('mounting list');
     }
 
+    componentWillUnmount () {
+        console.log('unmounting list');
+    }
+
     render () {
         const { dispatch, location, classes } = this.props;
         console.log('rendering list');

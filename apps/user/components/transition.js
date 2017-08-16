@@ -17,6 +17,7 @@ import Nav from './nav';
     },
     transitionedViewContainer: {
         position: 'absolute',
+        width: '100vw',
     },
 }))
 @connect((state, props) => ({ }))
