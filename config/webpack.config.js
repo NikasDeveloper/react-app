@@ -144,7 +144,7 @@ const webpackVendorConfig = {
     ],
     module: {
         rules: [{
-            test: /\.(js|mjs)$/i,
+            test: /\.(js|mjs|jsx)$/i,
             exclude: jsnextMainNotFound,
             use: [ ...(happypack ? [{ loader: 'happypack/loader?id=js' }] : jsLoaders) ],
         }],
@@ -162,7 +162,7 @@ const webpackConfig = {
     },
     resolve: {
         //modules: ['node_modules', path.resolve(__dirname, '../', 'node_modules')],
-        //extensions: ['.js', '.mjs', '.json', '.*'],
+        //extensions: ['.js', '.mjs', '.jsx', '.json', '.*'],
         symlinks: false
     },
     profile: true,
@@ -195,11 +195,11 @@ const webpackConfig = {
     ],
     module: {
         rules: [{
-            test: /\.(js|mjs)$/i,
+            test: /\.(js|mjs|jsx)$/i,
             exclude: jsnextMainNotFound,
             use: [ ...(happypack ? [{ loader: 'happypack/loader?id=js' }] : jsLoaders) ],
         },{
-            test: /\.(js|mjs)$/i,
+            test: /\.(js|mjs|jsx)$/i,
             exclude: /node_modules/,
             use: [{
                 loader: 'eslint-loader',

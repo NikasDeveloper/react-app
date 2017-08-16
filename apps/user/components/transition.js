@@ -32,7 +32,7 @@ export default class Transition extends React.Component {
     }
 
     render () {
-        const { children, history, classes } = this.props;
+        const { children, location, history, classes } = this.props;
         const { action } = history;
 
         const animation = action === 'PUSH' ? presets.slideLeft : presets.slideRight;
