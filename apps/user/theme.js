@@ -1,30 +1,26 @@
 import { jss } from 'react-jss';
 import reset from '@damianobarbati/jss-reset';
+import sfWoff from './fonts/sf.woff';
 
 //reset
 jss.createStyleSheet(reset).attach();
+
+//use font
+jss.createStyleSheet({
+    '@global html, body': {
+        fontFamily: 'San Francisco',
+    },
+}).attach();
 
 //font loading
 jss.createStyleSheet({
     '@font-face': {
         fontFamily: 'San Francisco',
-        src: [
-            'url("../fonts/sf.eot")',
-            'url("../fonts/sf.eot?#iefix") format("embedded-opentype")',
-            'url("../fonts/sf.woff2") format("woff2")',
-            'url("../fonts/sf.woff") format("woff")',
-            'url("../fonts/sf.ttf") format("truetype")',
-            'url("../fonts/sf.svg") format("svg")',
-        ],
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        src: `url(${sfWoff}) format("woff")`,
     },
 }).attach();
-
-//use font
-jss.createStyleSheet({
-    'html, body': {
-        fontFamily: 'San Francisco',
-    },
-});
 
 const theme = {
     nav: {

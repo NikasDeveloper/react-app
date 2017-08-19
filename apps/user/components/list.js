@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import injectSheet from 'react-jss'
+import injectSheet from 'react-jss';
 import cx from 'classnames';
+import { push } from 'react-router-redux';
 
-@withRouter
 @injectSheet(theme => ({
     root: {
         ...theme.list,
@@ -32,12 +31,14 @@ export default class List extends React.Component {
     }
 
     render () {
-        const { dispatch, location, classes } = this.props;
         console.log('rendering list');
+        const { classes } = this.props;
+        const { dispatch } = this.props;
 
         return (
             <div>
                 <h1 className={cx(classes.root)}>List</h1>
+                <p onClick={() => dispatch(push('/'))}>move to home</p>
             </div>
         );
     }

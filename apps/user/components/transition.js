@@ -1,45 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { push } from 'react-router-redux';
+import { withRouter } from 'react-router-dom';
 import { RouteTransition, presets } from 'react-router-transition';
-import injectSheet from 'react-jss'
-import cx from 'classnames';
+import injectSheet from 'react-jss';
 
 import Nav from './nav';
 
 @withRouter
 @injectSheet(theme => ({
     transitionContainer: {
-        width: '100vw',
+        width: '100%',
     },
     transitionedViewContainer: {
         position: 'absolute',
-        width: '100vw',
+        width: '100%',
     },
 }))
-@connect((state, props) => ({ }))
-export default class Transition extends React.Component {
+export default class Transition extends React.PureComponent {
     static propTypes = {
         children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
-        dispatch: PropTypes.func.isRequired,
-        location: PropTypes.object.isRequired,
-        match: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired,
         classes: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
+    }
+
+    componentWillMount () {
+        console.log('mounting transition');
+    }
+
+    componentWillUnmount () {
+        console.log('unmounting transition');
     }
 
     render () {
-        const { children, location, history, classes } = this.props;
+        const { children, classes, history } = this.props;
         const { action } = history;
 
         const animation = action === 'PUSH' ? presets.slideLeft : presets.slideRight;
 
+        console.log('rendering transition');
+
         return (
-            <RouteTransition pathname={location.pathname} component={false} {...animation} runOnMount={false} className={cx(classes.transitionContainer)}>
-                <div className={cx(classes.transitionedViewContainer)}>
+            <RouteTransition pathname={location.pathname} component={false} {...animation} runOnMount={false} className={classes.transitionContainer}>
+                <div className={classes.transitionedViewContainer}>
                     {children}
                 </div>
             </RouteTransition>

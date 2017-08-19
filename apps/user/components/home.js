@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import injectSheet from 'react-jss'
+import injectSheet from 'react-jss';
 import cx from 'classnames';
+import { push } from 'react-router-redux';
 
-@withRouter
 @injectSheet(theme => ({
     root: {
         ...theme.home,
@@ -32,12 +31,14 @@ export default class Home extends React.Component {
     }
 
     render () {
-        const { dispatch, location, classes } = this.props;
         console.log('rendering home');
+        const { classes } = this.props;
+        const { dispatch } = this.props;
 
         return (
             <div>
                 <h1 className={cx(classes.root)}>Home</h1>
+                <p onClick={() => dispatch(push('/list'))}>move to list</p>
                 <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Big_Bear_Valley%2C_California.jpg/1200px-Big_Bear_Valley%2C_California.jpg'} />
             </div>
         );

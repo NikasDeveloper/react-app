@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { RouteTransition, presets } from 'react-router-transition';
 import injectSheet from 'react-jss'
