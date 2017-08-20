@@ -40,7 +40,7 @@ const entriesHtmlBundles = pkg.bundles.filter(bundle => bundle.htmlInput).map(bu
 const entriesHtmlBundlesAssets = pkg.bundles.filter(bundle => bundle.htmlInput && bundle.entry).map(bundle => (
     new HtmlIncludeAssetsPlugin({
         assets: [
-            `build/${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}.js`,
+            ...(process.env.NODE_ENV === 'development' ? [`build/${bundle.name}/${bundle.vendorOutputFilename || 'vendor'}.js`] : []),
             `build/${bundle.name}/${bundle.bundleOutputFilename || 'app'}.js`,
         ],
         hash: true,
@@ -111,6 +111,11 @@ const dlls = pkg.bundles.filter(bundle => bundle.vendor).map(bundle => (
     })
 ));
 
+const clean = new CleanPlugin(['./build'], {
+    root: `${__dirname}/../`,
+    verbose: true
+});
+
 const webpackVendorConfig = {
     name: 'dll',
     entry: vendorEntries,
@@ -127,10 +132,7 @@ const webpackVendorConfig = {
         new webpack.NamedModulesPlugin(),
         new webpack.HashedModuleIdsPlugin(),
         new webpack.EnvironmentPlugin(['NODE_ENV']),
-        new CleanPlugin(['./build'], {
-            root: `${__dirname}/../`,
-            verbose: true
-        }),
+        clean,
         ...dlls,
         ...(happypack ? [happyPackJS] : []),
         new BundleAnalyzerPlugin({
@@ -152,8 +154,7 @@ const webpackVendorConfig = {
 };
 
 const webpackConfig = {
-    dependencies: ['dll'],
-    watch: true,
+    dependencies: process.env.NODE_ENV === 'development' ? ['dll'] : [],
     entry: entries,
     output: {
         publicPath: '/',
@@ -167,6 +168,7 @@ const webpackConfig = {
     },
     profile: true,
     plugins: [
+        ...(process.env.NODE_ENV === 'development' ? [] : [clean]),
         new CaseSensitivePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NamedModulesPlugin(),
@@ -175,7 +177,7 @@ const webpackConfig = {
         new webpack.EnvironmentPlugin(['NODE_ENV']),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
-        ...dllsReferences,
+        ...(process.env.NODE_ENV === 'development' ? dllsReferences : []),
         new NotifierPlugin({
             title: pkg.name,
             contentImage: pkg.logo,
@@ -276,4 +278,4 @@ else {
     }
 }
 
-module.exports = [webpackVendorConfig, webpackConfig];
+module.exports = process.env.NODE_ENV === 'development' ? [webpackVendorConfig, webpackConfig] : webpackConfig;
