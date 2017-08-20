@@ -8,9 +8,6 @@ import Nav from './nav';
 
 @withRouter
 @injectSheet(theme => ({
-    transitionContainer: {
-        width: '100%',
-    },
     transitionedViewContainer: {
         position: 'absolute',
         width: '100%',
@@ -40,7 +37,7 @@ export default class Transition extends React.PureComponent {
         console.log('rendering transition');
 
         return (
-            <RouteTransition pathname={location.pathname} component={false} {...animation} runOnMount={false} className={classes.transitionContainer}>
+            <RouteTransition pathname={location.pathname} component={false} {...animation} runOnMount={false}>
                 <div className={classes.transitionedViewContainer}>
                     {children}
                 </div>
