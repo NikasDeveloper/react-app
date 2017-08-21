@@ -5,13 +5,6 @@ import sfWoff from './fonts/sf.woff';
 //reset
 jss.createStyleSheet(reset).attach();
 
-//use font
-jss.createStyleSheet({
-    '@global html, body': {
-        fontFamily: 'San Francisco',
-    },
-}).attach();
-
 //font loading
 jss.createStyleSheet({
     '@font-face': {
@@ -19,6 +12,13 @@ jss.createStyleSheet({
         fontWeight: 'normal',
         fontStyle: 'normal',
         src: `url(${sfWoff}) format("woff")`,
+    },
+}).attach();
+
+//use font
+jss.createStyleSheet({
+    '@global html, body': {
+        fontFamily: 'San Francisco',
     },
 }).attach();
 

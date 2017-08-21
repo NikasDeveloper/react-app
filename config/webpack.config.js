@@ -88,6 +88,7 @@ const jsLoaders = [{
 const cordovaBuilds = pkg.bundles.filter(bundle => bundle.cordova).map(bundle => {
     const htmlOutputFilename = bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`;
     const build = `sh config/cordova.sh ${bundle.cordova} ${htmlOutputFilename}`;
+    console.log(build);
     return build;
 });
 
@@ -175,6 +176,7 @@ const webpackConfig = {
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.EnvironmentPlugin(['NODE_ENV']),
+        new webpack.ContextReplacementPlugin(/moment\/locale$/, new RegExp(pkg.momentLocales.join('|'))),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
         ...(process.env.NODE_ENV === 'development' ? dllsReferences : []),
