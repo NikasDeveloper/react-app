@@ -23,7 +23,15 @@
         "chrome 58",
         "safari 10"
     ],
-    "momentLocales": ["us", "uk", "de", "fr", "es", "pt", "it"],
+    "momentLocales": [
+        "us",
+        "uk",
+        "de",
+        "fr",
+        "es",
+        "pt",
+        "it"
+    ],
     "bundles": [
         {
             "name": "visitor",
@@ -171,6 +179,7 @@
         "babel-plugin-lodash": "^3.2.11",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "babel-plugin-transform-decorators-legacy": "^1.3.4",
+        "babel-polyfill": "^7.0.0",
         "babel-preset-env": "2.0.0-alpha.19",
         "babel-preset-react": "^6.24.1",
         "babel-preset-stage-0": "^6.24.1",
@@ -208,6 +217,7 @@
         "react-router-dom": "^4.1.2",
         "react-router-redux": "5.0.0-alpha.6",
         "react-router-transition": "^0.1.1",
+        "recharts": "^1.0.0-alpha.3",
         "redux": "^3.7.2",
         "string-replace-loader": "^1.2.0",
         "url-loader": "^0.5.9",
