@@ -7,6 +7,8 @@ import { push } from 'react-router-redux';
 import injectSheet from 'react-jss'
 import cx from 'classnames';
 
+import { name } from '../../../package';
+
 @withRouter
 @injectSheet(theme => ({
     root: {
@@ -38,10 +40,10 @@ export default class Nav extends React.Component {
         return (
             <ul className={cx(classes.root)}>
                 <NavLink to={'/'} activeClassName={classes.selectedLi} exact={true} strict={true}>
-                    <li className={cx(classes.li)}>home</li>
+                    <li className={cx(classes.li)}>{name} - home</li>
                 </NavLink>
                 <NavLink to={'/list'} activeClassName={classes.selectedLi} exact={true} strict={true}>
-                    <li className={cx(classes.li)}>list</li>
+                    <li className={cx(classes.li)}>{name} - list</li>
                 </NavLink>
             </ul>
         );

@@ -14,7 +14,6 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
-const ShellPlugin = require('webpack-shell-plugin');
 
 const happypack = true;
 
@@ -163,9 +162,9 @@ const webpackConfig = {
         filename: `build/[name].js`,
     },
     resolve: {
-        //modules: ['node_modules', path.resolve(__dirname, '../', 'node_modules')],
         //extensions: ['.js', '.mjs', '.jsx', '.json', '.*'],
-        symlinks: false
+        modules: [path.resolve(__dirname, '..', 'node_modules'), 'node_modules'],
+        symlinks: false,
     },
     profile: true,
     plugins: [
@@ -195,7 +194,6 @@ const webpackConfig = {
             statsFilename: 'build/stats.json',
         }),
         ...openBundles,
-        new ShellPlugin({ onBuildEnd: cordovaBuilds }),
     ],
     module: {
         rules: [{
@@ -231,11 +229,6 @@ const webpackConfig = {
                     enabled: process.env.NODE_ENV === 'development' ? false : true,
                 },
             }]
-        },{
-            test: /\.(json)$/i,
-            use: [{
-                loader: 'json-loader',
-            }],
         }],
     },
 };

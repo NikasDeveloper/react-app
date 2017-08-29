@@ -7,8 +7,6 @@ import createApp from 'react-create-app';
 import * as reducers from './reducers';
 import Router, { history } from './router';
 
-import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
-
 const development = process.env.NODE_ENV === 'development';
 
 if(development) {
