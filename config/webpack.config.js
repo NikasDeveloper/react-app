@@ -175,7 +175,7 @@ const webpackConfig = {
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.EnvironmentPlugin(['NODE_ENV']),
-        new webpack.ContextReplacementPlugin(/moment\/locale$/, new RegExp(pkg.momentLocales.join('|'))),
+        ...(pkg.momentLocales ? [new webpack.ContextReplacementPlugin(/moment\/locale$/, new RegExp(pkg.momentLocales.join('|')))] : []),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
         ...(process.env.NODE_ENV === 'development' ? dllsReferences : []),
