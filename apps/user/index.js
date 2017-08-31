@@ -1,8 +1,7 @@
 import Perf from 'react-addons-perf';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import createStore from 'react-create-store';
-import createApp from 'react-create-app';
+import { createStore, createApp } from 'reax-helpers';
 
 import * as reducers from './reducers';
 import Router, { history } from './router';
