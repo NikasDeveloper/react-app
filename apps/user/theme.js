@@ -1,6 +1,7 @@
 import { jss } from 'react-jss';
 import reset from '@damianobarbati/jss-reset';
-import sfWoff from './fonts/sf.woff';
+import roboto400 from 'typeface-roboto/files/roboto-latin-400.woff';
+import roboto700 from 'typeface-roboto/files/roboto-latin-700.woff';
 
 //reset
 jss.createStyleSheet(reset).attach();
@@ -8,17 +9,26 @@ jss.createStyleSheet(reset).attach();
 //font loading
 jss.createStyleSheet({
     '@font-face': {
-        fontFamily: 'San Francisco',
+        fontFamily: 'Roboto',
         fontWeight: 'normal',
         fontStyle: 'normal',
-        src: `url(${sfWoff}) format("woff")`,
+        src: `url(${roboto400}) format('woff')`,
+    },
+}).attach();
+
+jss.createStyleSheet({
+    '@font-face': {
+        fontFamily: 'Roboto',
+        fontWeight: 'bold',
+        fontStyle: 'normal',
+        src: `url(${roboto700}) format('woff')`,
     },
 }).attach();
 
 //use font
 jss.createStyleSheet({
     '@global html, body': {
-        fontFamily: 'San Francisco',
+        fontFamily: 'Roboto',
     },
 }).attach();
 

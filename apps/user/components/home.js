@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
 import cx from 'classnames';
@@ -20,17 +19,17 @@ export default class Home extends React.Component {
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object.isRequired,
-    }
+    };
 
-    componentWillMount () {
+    componentWillMount = () => {
         console.log('mounting home');
-    }
+    };
 
-    componentWillUnmount () {
+    componentWillUnmount = () => {
         console.log('unmounting home');
-    }
+    };
 
-    render () {
+    render = () => {
         console.log('rendering home');
         const { classes } = this.props;
         const { dispatch } = this.props;
@@ -42,5 +41,5 @@ export default class Home extends React.Component {
                 <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Big_Bear_Valley%2C_California.jpg/1200px-Big_Bear_Valley%2C_California.jpg'} />
             </div>
         );
-    }
+    };
 }

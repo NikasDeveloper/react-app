@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
 import cx from 'classnames';
@@ -20,17 +19,17 @@ export default class List extends React.Component {
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object.isRequired,
-    }
+    };
 
-    componentWillMount () {
+    componentWillMount = () => {
         console.log('mounting list');
-    }
+    };
 
-    componentWillUnmount () {
+    componentWillUnmount = () => {
         console.log('unmounting list');
-    }
+    };
 
-    render () {
+    render = () => {
         console.log('rendering list');
         const { classes } = this.props;
         const { dispatch } = this.props;
@@ -41,5 +40,5 @@ export default class List extends React.Component {
                 <p onClick={() => dispatch(push('/'))}>move to home</p>
             </div>
         );
-    }
+    };
 }

@@ -20,15 +20,15 @@ export default class Transition extends React.PureComponent {
         history: PropTypes.object.isRequired,
     }
 
-    componentWillMount () {
+    componentWillMount = () => {
         console.log('mounting transition');
-    }
+    };
 
-    componentWillUnmount () {
+    componentWillUnmount = () => {
         console.log('unmounting transition');
-    }
+    };
 
-    render () {
+    render = () => {
         const { children, classes, history } = this.props;
         const { action } = history;
 
@@ -43,5 +43,5 @@ export default class Transition extends React.PureComponent {
                 </div>
             </RouteTransition>
         );
-    }
+    };
 }

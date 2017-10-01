@@ -4,11 +4,6 @@ import classNames from 'classnames';
 import withStyle from 'react-jss';
 
 const styles = {
-    '@global': {
-        body: {
-            backgroundColor: 'black',
-        },
-    },
     root: {
         background: 'yellow',
         'margin-start': '1px',
@@ -19,9 +14,9 @@ const styles = {
 export default class Component1 extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-    }
+    };
 
-    render() {
+    render = () => {
         const { classes } = this.props;
 
         return (
@@ -29,5 +24,5 @@ export default class Component1 extends React.Component {
                 <h1 className={classNames(classes.root)}>Admin with custom jss!</h1>
             </div>
         );
-    }
+    };
 }

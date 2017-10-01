@@ -1,6 +1,9 @@
 # react-simple-app
 
 React app ready to be used for any purpose.
+Convention over configuration approach is adopted.
+Handle everything through your `package.json`.
+Never bother editing your `webpack.config.js` again.
 
 ## Usage
 ```
@@ -11,10 +14,50 @@ yarn serve:dev
 yarn build:dev //or yarn build:prod to build for production
 ```
 
-Define your bundles in the `package.json`.
-Here a full reference:
+## Configuration
+Your `package.json` is the source of truth.
+- `logo`: app logo filename, favicons will be automatically generated when building for production
+- `browserslist`: supported browsers, babel will transpile just what's needed
+- `locales`: supported locales, other moment libs will be trimmed out
+- `host`: object containing hostname, httpPort and httpsPort, and full url for the app to be served; nest this in `NODE_ENV` to have environment scoping
+- `bundles`: your bundles (i.e: visitor, user, admin) array
+
+Quick reference for `host` (no environment scoping):
 ```
-"bundles": [
+"host": {
+    "url": "http://localhost:8080",
+    "hostname": "localhost",
+    "httpPort": 8080
+},
+```
+
+Quick reference for `host` (with environment scoping):
+```
+"development": {
+    "host": {
+        "url": "https://dev.quant01.com:8081",
+        "hostname": "dev.quant01.com",
+        "httpPort": 8080,
+        "httpsPort": 8081
+    }
+},
+"staging": {
+    "host": {
+        "url": "https://stg.quant01.com",
+        "hostname": "stg.quant01.com"
+    }
+},
+"production": {
+    "host": {
+        "url": "https://www.quant01.com",
+        "hostname": "www.quant01.com"
+    }
+},
+```
+
+Quick reference for `bundles`:
+```
+[
     {
         "name": "visitor", //bundle name: /build/:bundleName is going to host the bundle generated files
         "baseRoute": "/", //optional, see index.js for an example on how to use koa to automatically serve bundles which have a route defined
@@ -36,38 +79,55 @@ Here a full reference:
         "htmlInput": "./apps/503.html",
         "htmlOutputFilename": "./build/503.html"
     }
-```
-
-Defining your app logo in the `package.json` will trigger favicon automatic generation when building for production.
-```
-"logo": "./logo.svg",
+]
 ```
 
 ## Cordova
+
+### install
 ```
-cordova create hello com.example.hello HelloWorld
+cordova create mobile myapp.com myapp
 cordova platform add ios android
-cordova plugin add cordova-custom-config
-cordova plugin add cordova-plugin-statusbar # some plugins prevent deviceready!
-# cordova.plugins.diagnostic cordova-plugin-globalization cordova-plugin-device
-# cordova-plugin-camera cordova-plugin-geolocation cordova-plugin-statusbar cordova-plugin-dialogs cordova-plugin-contacts cordova-plugin-media
-cd platforms/ios/cordova/node_modules/ && npm install ios-sim@latest && cd ../../../../
-cordova build ios && cordova emulate ios
+cordova plugin add cordova-custom-config cordova-plugin-statusbar
+cordova plugin add cordova-plugin-facebook --variable FACEBOOK_APP_ID=`jq -r .constants.auth.facebook.clientID ../package.json` --variable FACEBOOK_DISPLAY_NAME=`jq -r .name ../package.json`
+
+#cordova.plugins.diagnostic cordova-plugin-globalization cordova-plugin-device
+#cordova-plugin-camera cordova-plugin-geolocation cordova-plugin-statusbar cordova-plugin-dialogs cordova-plugin-contacts cordova-plugin-media
+
+sh config/cordova.sh ./mobile ./build/user/index.html ios
+sh config/cordova.sh ./mobile ./build/user/index.html android
 ```
 
-## Gotchas
-If webpack throws a weird error try the following in the webpack.config.js:
+### config.xml
 ```
-const happypack = false;
-```
-If it works then revert to:
-```
-const happypack = true;
-```
-And try to build again.
-Don't ask me why :|
+<allow-navigation href="*" />
 
-## Next steps:
-- babel 7: upgrade and remove decorator transform
-- browserlist in package.json, used by: babel env, autoprefixer and koa to serve unsupported
-- cordova bundle ready with conditional cordova.js (or dedicated chunk?)
+<preference name="Orientation" value="portrait" />
+<preference name="DisallowOverscroll" value="true" />
+
+<platform name="ios">
+    <allow-intent href="itms:*" />
+    <allow-intent href="itms-apps:*" />
+    <config-file parent="UIStatusBarHidden" platform="ios" target="*-Info.plist">
+        <true />
+    </config-file>
+    <config-file parent="UIViewControllerBasedStatusBarAppearance" platform="ios" target="*-Info.plist">
+        <false />
+    </config-file>
+</platform>
+```
+
+### Xcode
+Sign your app in Xcode after creating Cordova project.
+When Xcode upgrades:
+```
+cd /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport
+sudo ln -s 10.3.1\ \(14E8301\)/ 10.3.1
+```
+
+### AndroidStudio
+help > edit custom props => add `idea.case.sensitive.fs=true`
+To create an app hash for Facebook app:
+```
+keytool -exportcert -alias YourProjectName -keystore ~/.android/debug.keystore | openssl sha1 -binary | openssl base64
+```

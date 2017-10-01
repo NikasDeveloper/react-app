@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
@@ -32,9 +31,9 @@ export default class Layout extends React.Component {
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object.isRequired,
-    }
+    };
 
-    render () {
+    render = () => {
         const { children } = this.props;
 
         return (
@@ -45,5 +44,5 @@ export default class Layout extends React.Component {
                 </Transition>
             </div>
         );
-    }
+    };
 }

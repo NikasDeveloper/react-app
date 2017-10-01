@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom'
 import { push } from 'react-router-redux';
@@ -32,9 +31,9 @@ export default class Nav extends React.Component {
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object.isRequired,
-    }
+    };
 
-    render () {
+    render = () => {
         const { dispatch, location, classes } = this.props;
 
         return (
