@@ -4,7 +4,7 @@
     "description": "react-app",
     "license": "MIT",
     "main": "index.js",
-    "author": "Damiano Barbati <damiano.barbati@gmail.com> (http://github.com/damianobarbati)",
+    "author": "Damiano Barbati (http://github.com/damianobarbati)",
     "scripts": {
         "jslint": "eslint **/*.js --ignore-path .gitignore --ignore-pattern **/*.min.js .",
         "test": "jest --no-cache --coverage",
