@@ -1,6 +1,7 @@
 const pkg = require('../package.json');
 const path = require('path');
 const os = require('os');
+const ip = require('ip');
 const webpack = require('webpack');
 const HappyPack = require('happypack');
 const HtmlIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
@@ -8,12 +9,14 @@ const CaseSensitivePlugin = require('case-sensitive-paths-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const BabelMinifyPlugin = require('babili-webpack-plugin');
+const BabelMinifyPlugin = require('babel-minify-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
+
+process.env.DEVELOPMENT_ADDRESS = ip.address();
 
 const happypack = true;
 
@@ -131,7 +134,7 @@ const webpackVendorConfig = {
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.HashedModuleIdsPlugin(),
-        new webpack.EnvironmentPlugin(['NODE_ENV']),
+        new webpack.EnvironmentPlugin(['NODE_ENV', 'DEVELOPMENT_ADDRESS']),
         clean,
         ...dlls,
         ...(happypack ? [happyPackJS] : []),
@@ -174,7 +177,7 @@ const webpackConfig = {
         new webpack.NamedModulesPlugin(),
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.EnvironmentPlugin(['NODE_ENV']),
+        new webpack.EnvironmentPlugin(['NODE_ENV', 'DEVELOPMENT_ADDRESS']),
         ...(pkg.locales ? [new webpack.ContextReplacementPlugin(/moment\/locale$/, new RegExp(pkg.locales.join('|')))] : []),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
