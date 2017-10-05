@@ -1,9 +1,9 @@
 # react-simple-app
 
 React app ready to be used for any purpose.
+
 Convention over configuration approach is adopted.
-Handle everything through your `package.json`.
-Never bother editing your `webpack.config.js` again.
+Handle everything through your `package.json` and never bother editing your `webpack.config.js` again.
 
 ## Usage
 ```
@@ -13,6 +13,7 @@ yarn install
 yarn serve:dev
 yarn build:dev //or yarn build:prod to build for production
 ```
+Almost no styling used at all but what needed to show theme capabilities.
 
 ## Configuration
 Your `package.json` is the source of truth.
