@@ -1,9 +1,16 @@
-# react-simple-app
+# react-simple-app (to be soon renamed Yarsk)
 
 React app ready to be used for any purpose.
 
 Convention over configuration approach is adopted.
 Handle everything through your `package.json` and never bother editing your `webpack.config.js` again.
+
+#### Features:
+- easy and configurable multiple bundles management: public website (/), private area (/user), back-office (/admin), etc
+- babel 7, browserslist ad-hoc configuration
+- koa
+- react, redux, react-router-redux
+- jss and theming
 
 ## Usage
 ```
@@ -91,9 +98,7 @@ cordova create mobile myapp.com myapp
 cordova platform add ios android
 cordova plugin add cordova-custom-config cordova-plugin-statusbar
 cordova plugin add cordova-plugin-facebook --variable FACEBOOK_APP_ID=`jq -r .constants.auth.facebook.clientID ../package.json` --variable FACEBOOK_DISPLAY_NAME=`jq -r .name ../package.json`
-
-#cordova.plugins.diagnostic cordova-plugin-globalization cordova-plugin-device
-#cordova-plugin-camera cordova-plugin-geolocation cordova-plugin-statusbar cordova-plugin-dialogs cordova-plugin-contacts cordova-plugin-media
+cordova plugin add cordova-plugin-firebase
 
 sh config/cordova.sh ./mobile ./build/user/index.html ios
 sh config/cordova.sh ./mobile ./build/user/index.html android
@@ -119,7 +124,7 @@ sh config/cordova.sh ./mobile ./build/user/index.html android
 ```
 
 ### Xcode
-Sign your app in Xcode after creating Cordova project.
+Link your development team in Xcode after creating Cordova project.
 When Xcode upgrades:
 ```
 cd /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport

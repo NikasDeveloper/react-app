@@ -16,6 +16,8 @@ const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
 
+const hostConfig = pkg.host[process.env.NODE_ENV];
+
 process.env.DEVELOPMENT_ADDRESS = ip.address();
 
 const happypack = true;
@@ -58,10 +60,9 @@ const dllsReferences = pkg.bundles.filter(bundle => bundle.vendor).map(bundle =>
     })
 ));
 
-const host = pkg[process.env.NODE_ENV] && pkg[process.env.NODE_ENV].host ? pkg[process.env.NODE_ENV].host.url : pkg.host.url;
 const openBundles = pkg.bundles.filter(bundle => bundle.entry).map(bundle => (
     new OpenBrowserPlugin({
-        url: `${host}${bundle.baseRoute}`,
+        url: `${hostConfig.url}${bundle.baseRoute}`,
     })
 ));
 
