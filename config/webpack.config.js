@@ -16,7 +16,7 @@ const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
 
-const hostConfig = pkg.host[process.env.NODE_ENV];
+const hostConfig = pkg.host[process.env.NODE_ENV] || pkg.host;
 
 process.env.DEVELOPMENT_ADDRESS = ip.address();
 

@@ -11,6 +11,8 @@ Handle everything through your `package.json` and never bother editing your `web
 - koa
 - react, redux, react-router-redux
 - jss and theming
+- server side rendering
+- and so many more I can't even keep count
 
 ## Usage
 ```
@@ -88,6 +90,14 @@ Quick reference for `bundles`:
         "htmlOutputFilename": "./build/503.html"
     }
 ]
+```
+
+## SEO and SSR
+Bundles routes are server-side rendered by default for crawlers.
+Try out with:
+```
+curl http://localhost:8080  
+curl http://localhost:8080 --user-agent "Googlebot/2.1"
 ```
 
 ## Cordova

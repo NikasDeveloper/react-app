@@ -1,5 +1,6 @@
 const pkg = require('./package.json');
 
+const console = require('better-console');
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
@@ -13,6 +14,8 @@ const body = require('koa-body');
 const send = require('koa-send');
 const sslify = require('koa-sslify');
 const userAgent = require('koa-useragent');
+const puppeteer = require('puppeteer');
+
 const router = require('koa-router')();
 
 const app = new koa();
@@ -55,17 +58,34 @@ router.all('/build*', async ctx => {
     await send(ctx, ctx.path, { root: __dirname, setHeaders: cacheHeaders });
 });
 
-const bundles = pkg.bundles.filter(bundle => ![null, undefined, '/'].includes(bundle.baseRoute));
+const render = async (url, bot) => {
+    console.info('rendering', url, bot);
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: 'networkidle' });
+    await page.evaluate(() => {});
+    const content = await page.content();
+    await browser.close();
+    return content;
+};
+
+router.all('/build*', async ctx => {
+    await send(ctx, ctx.path, { root: __dirname, setHeaders: cacheHeaders });
+});
+
+//let "/" bundle to be the let in order so it does not prevail on others
+const bundles = pkg.bundles.filter(bundle => bundle.baseRoute).sort((a, b) => a.baseRoute.length <= b.baseRoute.length);
 for(const bundle of bundles) {
-    router.all([bundle.baseRoute, `${bundle.baseRoute}/*`], async ctx => {
-        await send(ctx, bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`, { root: __dirname, setHeaders: cacheHeaders });
+    router.all([bundle.baseRoute, `${bundle.baseRoute !== '/' ? bundle.baseRoute : ''}/*`], async ctx => {
+        const { protocol, host, url: pathname, userAgent: { isBot } } = ctx;
+        const url = `${protocol}://${host}${pathname}`;
+
+        if(isBot && isBot !== 'curl')
+            ctx.body = await render(url, isBot);
+        else
+            await send(ctx, bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`, { root: __dirname, setHeaders: cacheHeaders });
     });
 }
-
-const defaultBundle = pkg.bundles.find(bundle => bundle.baseRoute === '/');
-router.all('*', async ctx => {
-    await send(ctx, defaultBundle.htmlOutputFilename || `./build/${defaultBundle.name}/index.html`, { root: __dirname, setHeaders: cacheHeaders });
-});
 
 app.use(router.routes());
 
