@@ -13,7 +13,7 @@ module.exports = {
     error_file: 'logs/error.log',
     out_file: 'logs/output.log',
     watch: ['index.js', 'config/', 'api/', 'services/', 'models/'],
-    env: {
+    env_development: {
         NODE_ENV: 'development',
     },
     env_staging: {

@@ -243,13 +243,7 @@ if(process.env.NODE_ENV === 'development') {
     webpackConfig.watch = true;
 }
 else {
-    webpackVendorConfig.devtool = webpackConfig.devtool = 'cheap-module-sourcemap';
-
-    webpackVendorConfig.plugins = [
-        ...webpackVendorConfig.plugins,
-        new BabelMinifyPlugin(),
-        new CompressionPlugin(),
-    ];
+    webpackConfig.devtool = 'cheap-module-sourcemap';
 
     webpackConfig.plugins = [
         ...webpackConfig.plugins,

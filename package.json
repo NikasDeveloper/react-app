@@ -14,9 +14,9 @@
         "build:stg": "NODE_ENV=staging webpack --config ./config/webpack.config.js --progress",
         "build:prod": "NODE_ENV=production webpack --config ./config/webpack.config.js --progress",
         "unserve": "pm2 flush && pm2 delete ./config/pm2.config.js && pm2 flush",
-        "serve:dev": "pm2 start ./config/pm2.config.js --env development",
-        "serve:stg": "pm2 start ./config/pm2.config.js --env staging",
-        "serve:prod": "pm2 start ./config/pm2.config.js --env production"
+        "serve:dev": "pm2 startOrReload ./config/pm2.config.js --env development",
+        "serve:stg": "pm2 startOrReload ./config/pm2.config.js --env staging",
+        "serve:prod": "pm2 startOrReload ./config/pm2.config.js --env production"
     },
     "logo": "./logo.svg",
     "browserslist": [
@@ -164,7 +164,7 @@
         "koa-sslify": "2.1.2",
         "koa-useragent": "1.0.0",
         "lodash": "4.17.4",
-        "puppeteer": "^0.11.0",
+        "puppeteer": "^0.12.0",
         "yargs": "9.0.1"
     },
     "devDependencies": {
@@ -184,7 +184,7 @@
         "classnames": "2.2.5",
         "clean-webpack-plugin": "0.1.17",
         "compression-webpack-plugin": "1.0.1",
-        "eslint": "4.8.0",
+        "eslint": "4.9.0",
         "eslint-loader": "1.9.0",
         "eslint-plugin-import": "2.7.0",
         "eslint-plugin-jest": "21.2.0",
@@ -210,9 +210,9 @@
         "react-router-transition": "0.x",
         "reax-helpers": "1.0.9",
         "string-replace-loader": "1.3.0",
-        "typeface-roboto": "0.0.35",
+        "typeface-roboto": "0.0.41",
         "url-loader": "0.6.2",
-        "webpack": "3.7.1",
+        "webpack": "3.8.1",
         "webpack-bundle-analyzer": "2.9.0",
         "webpack-notifier": "1.5.0"
     }

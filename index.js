@@ -29,7 +29,7 @@ app.use(body({ formLimit: '1mb', jsonLimit: '1mb', strict: false, multipart: tru
 app.use(userAgent);
 
 const hostConfig = pkg.host[process.env.NODE_ENV] || pkg.host;
-const sslConfig = (pkg.ssl && pkg.ssl[process.env.NODE_ENV]) || null;
+const sslConfig = pkg.ssl ? (pkg.ssl || pkg.ssl[process.env.NODE_ENV]) : null;
 
 if(sslConfig) {
     app.use(sslify({
