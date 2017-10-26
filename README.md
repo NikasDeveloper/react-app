@@ -3,15 +3,16 @@
 React app ready to be used for any purpose.
 
 Convention over configuration approach is adopted.
+
 Handle everything through your `package.json` and never bother editing your `webpack.config.js` again.
 
 #### Features:
-- easy and configurable multiple bundles management: public website (/), private area (/user), back-office (/admin), etc
-- babel 7, browserslist ad-hoc configuration
-- koa
-- react, redux, react-router-redux
+- easy and configurable multiple bundles management: public website (/), private area (/user), back-office (/admin), and whatever your app needs
+- babel 7 and browserlist ad-hoc configuration
+- assets optimisation and compression
+- koa, react, redux, react-router-redux
 - jss and theming
-- server side rendering
+- server side rendering and built-in critical-css support
 - and so many more I can't even keep count
 
 ## Usage
@@ -19,10 +20,10 @@ Handle everything through your `package.json` and never bother editing your `web
 git clone git@github.com:damianobarbati/react-app.git
 npm install -g yarn pm2
 yarn install
-yarn serve:dev
-yarn build:dev //or yarn build:prod to build for production
+brew install redis # if redis is not installed then remove "redis" section in package.json, /api/redis.js and redis entry in /api/index.js
+yarn serve:dev # yarn serve:prod to serve production
+yarn build:dev # yarn build:prod to build production
 ```
-Almost no styling used at all but what needed to show theme capabilities.
 
 ## Configuration
 Your `package.json` is the source of truth.
@@ -31,6 +32,7 @@ Your `package.json` is the source of truth.
 - `locales`: supported locales, other moment libs will be trimmed out
 - `host`: object containing hostname, httpPort and httpsPort, and full url for the app to be served; nest this in `NODE_ENV` to have environment scoping
 - `bundles`: your bundles (i.e: visitor, user, admin) array
+- `redis`: your redis connection config
 
 Quick reference for `host` (no environment scoping):
 ```
@@ -81,6 +83,10 @@ Quick reference for `bundles`:
         "vendorOutputFilename": "vendor.js", //optional: name for the ddl/vendor file created in the /build/:bundleName folder, default is vendor.js
         "bundleOutputFilename": "app.js", //optional: name for the bundle file created in the /build/:bundleName folder, default is app.js
         "cssOutputFilename": null, //optional: defining null is useful when using jss so no css file will be added to the html file, otherwise default is app.css
+        "prerender": true, //enable prerendering: remember to define "redis" connection as well!
+        "ttl": 3600 //prerender page ttl,
+        "identifier": "user", //if identifier and secret are defined then bundle is http-auth protected
+        "secret": "password", //if identifier and secret are defined then bundle is http-auth protected
     },
     //other bundles
     {

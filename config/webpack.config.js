@@ -230,7 +230,24 @@ const webpackConfig = {
             },{
                 loader: 'img-loader',
                 options: {
-                    enabled: process.env.NODE_ENV === 'development' ? false : true,
+                    enabled: process.env.NODE_ENV !== 'development',
+                    gifsicle: {
+                        interlaced: false
+                    },
+                    mozjpeg: {
+                        progressive: true,
+                        arithmetic: false
+                    },
+                    optipng: false,
+                    pngquant: {
+                        quality: 80,
+                    },
+                    svgo: {
+                        plugins: [
+                            { removeTitle: true },
+                            { convertPathData: false }
+                        ],
+                    },
                 },
             }]
         }],
@@ -262,10 +279,6 @@ else {
                 inject: true,
                 emitStats: true,
                 persistentCache: true,
-                icons: {
-                    favicons: true, android: true, appleIcon: true, appleStartup: true,
-                    coast: false, firefox: false, opengraph: false, twitter: false, yandex: false, windows: false,
-                },
             }),
         ];
     }

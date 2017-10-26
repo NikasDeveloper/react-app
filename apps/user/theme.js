@@ -1,5 +1,5 @@
 import { jss } from 'react-jss';
-import reset from '@damianobarbati/jss-reset';
+import reset from 'jss-reset';
 import roboto400 from 'typeface-roboto/files/roboto-latin-400.woff';
 import roboto700 from 'typeface-roboto/files/roboto-latin-700.woff';
 

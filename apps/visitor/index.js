@@ -4,7 +4,7 @@ import { createStore, createApp } from 'reax-helpers';
 
 import { create as createJss } from 'jss';
 import { JssProvider, jss } from 'react-jss';
-import reset from '@damianobarbati/jss-reset';
+import reset from 'jss-reset';
 
 import * as reducers from './reducers';
 import Router, { history } from './router';
