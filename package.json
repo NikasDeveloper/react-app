@@ -81,6 +81,31 @@
             "htmlInput": "./apps/index.html"
         },
         {
+            "name": "mui",
+            "baseRoute": "/mui",
+            "entry": "./apps/mui/index.js",
+            "vendor": [
+                "jss-reset",
+                "axios",
+                "classnames",
+                "history",
+                "lodash-es",
+                "material-ui",
+                "prop-types",
+                "react",
+                "react-dom",
+                "react-jss",
+                "react-redux",
+                "react-router-dom",
+                "react-router-redux",
+                "react-router-transition",
+                "reax-helpers",
+                "redux"
+            ],
+            "htmlInput": "./apps/index.html",
+            "prerender": true
+        },
+        {
             "name": "503",
             "htmlInput": "./apps/503.html",
             "htmlOutputFilename": "./build/503.html"
@@ -153,11 +178,21 @@
         "host": "127.0.0.1",
         "port": 6379
     },
+    "jest": {
+        "bail": true,
+        "verbose": true,
+        "transformIgnorePatterns": [
+            "!node_modules/react-runtime"
+        ],
+        "setupFiles": [
+            "raf/polyfill"
+        ]
+    },
     "dependencies": {
         "axios": "^0.17.0",
         "better-console": "^1.0.1",
-        "binize": "^1.0.3",
-        "graphjql": "^1.0.3",
+        "binize": "^1.0.4",
+        "graphjql": "^1.0.5",
         "ioredis": "^3.2.1",
         "ip": "^1.1.5",
         "jws": "^3.1.4",
@@ -181,7 +216,7 @@
         "nodemailer": "^4.3.1",
         "pg": "^7.3.0",
         "puppeteer": "^0.12.0",
-        "sequelize": "^4.18.0",
+        "sequelize": "^4.19.0",
         "sleep-promise": "^2.0.0",
         "sqlite3": "^3.1.13",
         "yargs": "10.0.3"
@@ -202,7 +237,7 @@
         "classnames": "2.2.5",
         "clean-webpack-plugin": "0.1.17",
         "compression-webpack-plugin": "1.0.1",
-        "eslint": "4.9.0",
+        "eslint": "4.10.0",
         "eslint-loader": "1.9.0",
         "eslint-plugin-import": "2.8.0",
         "eslint-plugin-jest": "21.2.0",
@@ -216,8 +251,10 @@
         "html-webpack-plugin": "2.30.1",
         "img-loader": "2.0.0",
         "jest": "21.2.1",
-        "jss-reset": "^1.0.0",
+        "jss-reset": "^1.0.2",
         "lodash-es": "4.17.4",
+        "material-ui": "v1.0.0-beta.18",
+        "muicons": "^1.0.10",
         "open-browser-webpack-plugin": "0.0.5",
         "prop-types": "15.6.0",
         "react": "16.0.0",
