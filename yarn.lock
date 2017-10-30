@@ -4350,10 +4350,6 @@ ipaddr.js@1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.5.2.tgz#d4b505bde9946987ccf0fc58d9010ff9607e3fa0"
 
-ipchecker@*:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/ipchecker/-/ipchecker-0.0.2.tgz#9606ebf7bb3cd23419b149a704e17c1532f0b679"
-
 is-absolute@^0.1.5:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/is-absolute/-/is-absolute-0.1.7.tgz#847491119fccb5fb436217cc737f7faad50f603f"
@@ -5201,12 +5197,6 @@ koa-basic-auth@^2.0.0:
   dependencies:
     basic-auth "^1.0.3"
 
-koa-better-ratelimit@2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/koa-better-ratelimit/-/koa-better-ratelimit-2.1.2.tgz#cf884e332ad00ccf85cc67dab2bb8e29775a290d"
-  dependencies:
-    ipchecker "*"
-
 koa-body@2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/koa-body/-/koa-body-2.5.0.tgz#84e8fcd8d5229a8cc1cb98a926e939069e716915"
@@ -5261,6 +5251,15 @@ koa-mount@^3.0.0:
 koa-no-trailing-slash@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/koa-no-trailing-slash/-/koa-no-trailing-slash-2.1.0.tgz#a6a090cd4e77f72d47bec75be8b6b895f6a27a12"
+
+koa-ratelimit@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/koa-ratelimit/-/koa-ratelimit-4.0.0.tgz#c126e6f6ae38aaa2fa12c62f4af7759157592f3c"
+  dependencies:
+    debug "^2.2.0"
+    ms "^0.7.1"
+    ratelimiter "^3.0.2"
+    thenify "^3.2.0"
 
 koa-router@7.2.1:
   version "7.2.1"
@@ -5949,6 +5948,10 @@ ms@0.7.1:
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
+
+ms@^0.7.1:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.3.tgz#708155a5e44e33f5fd0fc53e81d0d40a91be1fff"
 
 muicons@^1.0.10:
   version "1.0.10"
@@ -6820,6 +6823,10 @@ range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
+ratelimiter@^3.0.2:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/ratelimiter/-/ratelimiter-3.0.3.tgz#6dbca58b05422f2a08e224d4ba3a0cfb86c30966"
+
 raw-body@2.3.2, raw-body@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.3.2.tgz#bcd60c77d3eb93cde0050295c3f379389bc88f89"
@@ -7528,9 +7535,9 @@ sequelize@^4.16.1:
     validator "^9.1.0"
     wkx "^0.4.1"
 
-sequelize@^4.19.0:
-  version "4.19.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.19.0.tgz#761b77c1fbe48e54b3fe058ebab446b9eaaec0e9"
+sequelize@^4.20.1:
+  version "4.20.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.20.1.tgz#97a51ff46c17070dd7fa6fcdcf54cee918d77a77"
   dependencies:
     bluebird "^3.4.6"
     cls-bluebird "^2.0.1"
@@ -8046,7 +8053,7 @@ thenify-all@^1.0.0:
   dependencies:
     thenify ">= 3.1.0 < 4"
 
-"thenify@>= 3.1.0 < 4":
+"thenify@>= 3.1.0 < 4", thenify@^3.2.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/thenify/-/thenify-3.3.0.tgz#e69e38a1babe969b0108207978b9f62b88604839"
   dependencies:

@@ -8,7 +8,7 @@ const koa = require('koa');
 const cors = require('kcors');
 const compress = require('koa-compress');
 const noTrailingSlash = require('koa-no-trailing-slash');
-const limit = require('koa-better-ratelimit');
+const rateLimit = require('koa-ratelimit');
 const json = require('koa-json');
 const body = require('koa-body');
 const send = require('koa-send');
@@ -28,10 +28,18 @@ const app = new koa();
 app.use(cors());
 app.use(compress());
 app.use(noTrailingSlash());
-app.use(limit({ duration: 3600, max: 500 }));
 app.use(json({ pretty: true, spaces: 4 }));
 app.use(body({ formLimit: '1mb', jsonLimit: '1mb', strict: false, multipart: true }));
 app.use(userAgent);
+
+if(redis) {
+    app.use(rateLimit({
+        db: redis,
+        duration: 60000,
+        max: 500,
+        id: ctx => ctx.ip,
+    }));
+}
 
 const hostConfig = pkg.host[process.env.NODE_ENV] || pkg.host;
 const sslConfig = pkg.ssl ? (pkg.ssl || pkg.ssl[process.env.NODE_ENV]) : null;
