@@ -83,7 +83,7 @@ const cacheHeaders = (res, path, stats) => {
     res.setHeader('Cache-Control', 'max-age=' + 3600 * 24 * 7);
 };
 
-const render = async (url, ttl = 3600, bot) => {
+const render = async (url, ttl = 3600, bot, identifier, secret) => {
     console.info('rendering', url, bot);
 
     if(redis) {
@@ -98,6 +98,9 @@ const render = async (url, ttl = 3600, bot) => {
 
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
+    if(identifier && secret)
+        await page.authenticate({ username: identifier, password: secret });
+
     await page.goto(url + (!url.includes('?') && '?' || '&') + 'prerender=1', { waitUntil: 'networkidle' });
     const content = await page.content();
     await browser.close();
@@ -120,7 +123,7 @@ for(const bundle of bundles) {
     const { name, baseRoute, htmlOutputFilename, noIndex, prerender, ttl, identifier, secret } = bundle;
 
     if(identifier && secret)
-        app.use(mount('/admin', auth({ name: identifier, pass: secret })));
+        app.use(mount(baseRoute, auth({ name: identifier, pass: secret })));
 
     router.all([baseRoute, `${baseRoute !== '/' ? baseRoute : ''}/*`], async ctx => {
         const { protocol, host, url: pathname, userAgent: { isBot } } = ctx;
@@ -129,7 +132,7 @@ for(const bundle of bundles) {
         if(noIndex)
             ctx.body = 'User-agent: *\nDisallow: /';
         else if(prerender && !ctx.request.query.prerender)
-            ctx.body = await render(url, ttl, isBot);
+            ctx.body = await render(url, ttl, isBot, identifier, secret);
         else
             await send(ctx, htmlOutputFilename || `./build/${name}/index.html`, { root: __dirname, setHeaders: cacheHeaders });
     });

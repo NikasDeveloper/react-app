@@ -4,7 +4,6 @@ module.exports = {
     name: config.name,
     script: 'index.js',
     exec_mode: 'cluster',
-    instances: 'max',
     node_args: '--max_old_space_size=512 --harmony --trace-deprecation',
     max_memory_restart: '512M',
     max_restarts: 3,

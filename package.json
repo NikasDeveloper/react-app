@@ -14,9 +14,9 @@
         "build:stg": "NODE_ENV=staging webpack --config ./config/webpack.config.js --progress",
         "build:prod": "NODE_ENV=production webpack --config ./config/webpack.config.js --progress",
         "unserve": "pm2 flush && pm2 delete ./config/pm2.config.js && pm2 flush",
-        "serve:dev": "pm2 startOrReload ./config/pm2.config.js --env development",
-        "serve:stg": "pm2 startOrReload ./config/pm2.config.js --env staging",
-        "serve:prod": "pm2 startOrReload ./config/pm2.config.js --env production"
+        "serve:dev": "pm2 startOrReload ./config/pm2.config.js --env development -i 1",
+        "serve:stg": "pm2 startOrReload ./config/pm2.config.js --env staging -i max",
+        "serve:prod": "pm2 startOrReload ./config/pm2.config.js --env production -i max"
     },
     "logo": "./logo.svg",
     "browserslist": [
@@ -211,7 +211,7 @@
         "koa-useragent": "1.0.0",
         "lodash": "^4.17.4",
         "moment": "^2.19.1",
-        "moment-timezone": "^0.5.13",
+        "moment-timezone": "^0.5.14",
         "node-schedule": "^1.2.5",
         "nodemailer": "^4.3.1",
         "pg": "^7.3.0",

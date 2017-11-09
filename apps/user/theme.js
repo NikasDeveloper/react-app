@@ -28,7 +28,13 @@ jss.createStyleSheet({
 //use font
 jss.createStyleSheet({
     '@global html, body': {
-        fontFamily: 'Roboto',
+        margin: 0,
+        padding: 0,
+        height: '100%',
+        width: '100%',
+        overflow: 'auto',
+        '-webkit-overflow-scrolling': 'touch',
+        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     },
 }).attach();
 
