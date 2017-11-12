@@ -101,7 +101,7 @@ const render = async (url, ttl = 3600, bot, identifier, secret) => {
     if(identifier && secret)
         await page.authenticate({ username: identifier, password: secret });
 
-    await page.goto(url + (!url.includes('?') && '?' || '&') + 'prerender=1', { waitUntil: 'networkidle' });
+    await page.goto(url + (!url.includes('?') && '?' || '&') + 'prerender=1', { waitUntil: 'networkidle2' });
     const content = await page.content();
     await browser.close();
 
