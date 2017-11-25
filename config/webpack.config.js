@@ -174,7 +174,6 @@ const webpackConfig = {
     plugins: [
         ...(process.env.NODE_ENV === 'development' ? [] : [clean]),
         new CaseSensitivePlugin(),
-        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
@@ -201,6 +200,11 @@ const webpackConfig = {
     ],
     module: {
         rules: [{
+            test: /\.json$/,
+            use: [{
+                loader: 'json-es6-loader'
+            }],
+        },{
             test: /\.(js|mjs|jsx)$/i,
             exclude: jsnextMainNotFound,
             use: [ ...(happypack ? [{ loader: 'happypack/loader?id=js' }] : jsLoaders) ],

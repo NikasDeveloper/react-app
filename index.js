@@ -83,6 +83,10 @@ const cacheHeaders = (res, path, stats) => {
     res.setHeader('Cache-Control', 'max-age=' + 3600 * 24 * 7);
 };
 
+router.all('/build*', async ctx => {
+    await send(ctx, ctx.path, { root: __dirname, setHeaders: cacheHeaders });
+});
+
 const render = async (url, ttl = 3600, bot, identifier, secret) => {
     console.info('rendering', url, bot);
 
@@ -100,8 +104,7 @@ const render = async (url, ttl = 3600, bot, identifier, secret) => {
     const page = await browser.newPage();
     if(identifier && secret)
         await page.authenticate({ username: identifier, password: secret });
-
-    await page.goto(url + (!url.includes('?') && '?' || '&') + 'prerender=1', { waitUntil: 'networkidle2' });
+    await page.goto(url + (!url.includes('?') && '?' || '&') + 'prerender=1', { waitUntil: 'networkidle0' });
     const content = await page.content();
     await browser.close();
 
@@ -111,10 +114,6 @@ const render = async (url, ttl = 3600, bot, identifier, secret) => {
 
     return content;
 };
-
-router.all('/build*', async ctx => {
-    await send(ctx, ctx.path, { root: __dirname, setHeaders: cacheHeaders });
-});
 
 //let "/" bundle to be the let in order so it does not prevail on others
 const bundles = pkg.bundles.filter(bundle => bundle.baseRoute).sort((a, b) => a.baseRoute.length <= b.baseRoute.length);
@@ -129,7 +128,7 @@ for(const bundle of bundles) {
         const { protocol, host, url: pathname, userAgent: { isBot } } = ctx;
         const url = `${protocol}://${host}${pathname}`;
 
-        if(noIndex)
+        if(isBot && noIndex)
             ctx.body = 'User-agent: *\nDisallow: /';
         else if(prerender && !ctx.request.query.prerender)
             ctx.body = await render(url, ttl, isBot, identifier, secret);
