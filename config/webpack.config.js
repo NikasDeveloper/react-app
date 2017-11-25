@@ -174,6 +174,7 @@ const webpackConfig = {
     plugins: [
         ...(process.env.NODE_ENV === 'development' ? [] : [clean]),
         new CaseSensitivePlugin(),
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),

@@ -25,6 +25,16 @@ const APIs = require('./api');
 
 const app = new koa();
 
+/* */
+const webpack = require('webpack');
+const webpackConfig = require('./config/webpack.config');
+const compiler = webpack(webpackConfig);
+const publicPath = process.env.NODE_ENV === 'development' ? webpackConfig[1].output.publicPath : webpackConfig.output.publicPath;
+
+app.use(require("webpack-dev-middleware")(compiler, { noInfo: true, publicPath }));
+app.use(require("webpack-hot-middleware")(compiler, { log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000 }));
+/* */
+
 app.use(cors());
 app.use(compress());
 app.use(noTrailingSlash());

@@ -36,7 +36,7 @@
         {
             "name": "visitor",
             "baseRoute": "/",
-            "entry": "./apps/visitor/index.js",
+            "entry": ["./apps/visitor/index.js", "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true"],
             "vendor": [
                 "jss-reset",
                 "axios",
