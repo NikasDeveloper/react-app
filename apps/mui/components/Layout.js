@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import Helmet from 'react-helmet';
 
 import cx from 'classnames';
 import { withStyles } from 'material-ui/styles';
@@ -23,9 +24,17 @@ export default class Layout extends React.Component {
         const { children, classes, dispatch } = this.props;
 
         return (
-            <div>
-                {children}
-            </div>
+            <React.Fragment>
+                <Helmet>
+                    <title>MUI</title>
+                    <link rel={'canonical'} href={'http://mysite.com/example'} />
+                    <meta name={'apple-mobile-web-app-title'} content={'CFC'} />
+                    <meta name={'application-name'} content={'CFC'} />
+                </Helmet>
+                <div>
+                    {children}
+                </div>
+            </React.Fragment>
         );
     };
 }

@@ -45,7 +45,7 @@ Each entry (i.e: database connections, facebook, twitter and google api keys, ho
 ```
 ssh-keygen -t rsa -b 4096 -C 'build@travis-ci.com' -f travis-ci
 ssh-copy-id -i travis-ci <user>@<hostname>
-travis encrypt-file travis-ci --add
+travis encrypt-file travis-ci
 rm -f travis-ci
 git add travis-ci.enc
 ```

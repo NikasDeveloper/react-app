@@ -201,6 +201,7 @@ const webpackConfig = {
     module: {
         rules: [{
             test: /\.json$/,
+            exclude: /node_modules/,
             use: [{
                 loader: 'json-es6-loader'
             }],
@@ -276,13 +277,18 @@ else {
         webpackConfig.plugins = [
             ...webpackConfig.plugins,
             new FaviconsPlugin({
-                title: pkg.name,
+                inject: false,
                 logo: pkg.logo,
                 prefix: 'build/icons/',
                 statsFilename: 'build/icons/stats.json',
-                inject: true,
                 emitStats: true,
                 persistentCache: true,
+                icons: {
+                    favicons: true,
+                    android: true,
+                    appleIcon: true,
+                    appleStartup: true,
+                },
             }),
         ];
     }

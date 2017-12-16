@@ -3,6 +3,9 @@ import { ConnectedRouter } from 'react-router-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 
+import GA from 'react-ga';
+import { google } from '../../package';
+
 import { MuiThemeProvider } from 'material-ui/styles';
 import theme from './theme';
 
@@ -13,6 +16,13 @@ import Layout from './components/Layout';
 import Home from './components/Home';
 
 export const history = createHistory({ basename: '/mui' });
+const trackView = () => GA.pageview(window.location.pathname + window.location.search);
+
+if(process.env.NODE_ENV === 'production') {
+    GA.initialize(google.analyticsTrackingID);
+    trackView();
+    history.listen((location, action) => trackView());
+}
 
 export default class Router extends React.Component {
     render() {
