@@ -22,6 +22,7 @@ const router = require('koa-router')();
 
 const redis = pkg.redis ? require('./api/redis') : null;
 const APIs = require('./api');
+const jobs = require('./api/jobs');
 
 const app = new koa();
 
@@ -148,3 +149,7 @@ if(sslConfig) {
     };
     https.createServer(sslOptions, app.callback()).listen(hostConfig.httpsPort || 443);
 }
+
+if(process.env.pm_id === '0')
+    for(const time in jobs)
+        scheduler.scheduleJob(time, jobs[time]);

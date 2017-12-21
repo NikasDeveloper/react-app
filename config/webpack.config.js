@@ -37,6 +37,7 @@ const entriesHtmlBundles = pkg.bundles.filter(bundle => bundle.htmlInput).map(bu
         template: bundle.htmlInput,
         filename: bundle.htmlOutputFilename || `./build/${bundle.name}/index.html`,
         inject: true,
+        NODE_ENV: process.env.NODE_ENV,
         chunks: [],
     })
 ));

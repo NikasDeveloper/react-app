@@ -1,19 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, createApp } from 'reax-helpers';
-
-import { create as createJss } from 'jss';
-import { JssProvider, jss } from 'react-jss';
-import reset from 'jss-reset';
+import { createStore, EmitterProvider, App } from 'reax-helpers';
 
 import * as reducers from './reducers';
 import Router, { history } from './router';
 
 const development = process.env.NODE_ENV == 'development';
 
-const store = createStore({ reducers, history, verbose: development, loggerCollapsed: true, loggerFilter: ['persist/'] });
-const App = createApp({ store, Router, history, persistKeyPrefix: 'visitor', persistWhitelist: ['main'] });
+const persistConfig = {
+    key: 'mui',
+    keyPrefix: 'mui/',
+    whitelist: ['main'],
+    blacklist: ['routing'],
+};
 
-jss.createStyleSheet(reset).attach();
+const { store, persistor } = createStore({ reducers, history, persistConfig, verbose: development, loggerCollapsed: true, loggerFilter: ['/persist'] });
 
-ReactDOM.render(<JssProvider jss={jss}><App /></JssProvider>, document.getElementById('app'));
+window.persistor = persistor;
+
+const app = (
+    <EmitterProvider>
+        <App store={store} persistor={persistor}>
+            <Router />
+        </App>
+    </EmitterProvider>
+);
+
+ReactDOM.render(app, document.getElementById('app'));

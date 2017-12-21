@@ -1,5 +1,5 @@
-const main = require('./main');
+const rpc = require('./rpc');
 
 module.exports = {
-    main,
+    rpc,
 };

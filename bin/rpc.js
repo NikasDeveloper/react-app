@@ -1,4 +1,4 @@
-const service = require('../api/main');
+const service = require('../api/rpc');
 
 const bin = module.exports = {};
 for(const key in service)

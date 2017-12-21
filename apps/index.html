@@ -7,6 +7,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+        <%if (htmlWebpackPlugin.options.NODE_ENV == 'production') { %>
         <link rel="shortcut icon" href="/build/icons/favicon.ico">
         <link rel="icon" type="image/png" sizes="32x32" href="/build/icons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/build/icons/favicon-16x16.png">
@@ -31,6 +32,7 @@
         <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 1)" href="/build/icons/apple-touch-startup-image-768x1004.png">
         <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" href="/build/icons/apple-touch-startup-image-1496x2048.png">
         <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" href="/build/icons/apple-touch-startup-image-1536x2008.png">
+        <% } %>
     </head>
     <body>
         <div id="app"></div>
