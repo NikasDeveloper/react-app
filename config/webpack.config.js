@@ -1,7 +1,9 @@
+const console = require('better-console');
 const pkg = require('../package.json');
 const path = require('path');
 const os = require('os');
 const ip = require('ip');
+const symlinked = require('symlinked');
 const webpack = require('webpack');
 const HappyPack = require('happypack');
 const HtmlIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
@@ -15,6 +17,9 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
+
+const symlinks = !!symlinked.names().length;
+console.warn('NPM link\'ed modules found: skipping DLLs');
 
 const hostConfig = pkg.host[process.env.NODE_ENV] || pkg.host;
 
@@ -159,7 +164,7 @@ const webpackVendorConfig = {
 };
 
 const webpackConfig = {
-    dependencies: process.env.NODE_ENV === 'development' ? ['dll'] : [],
+    dependencies: process.env.NODE_ENV === 'development' && !symlinks ? ['dll'] : [],
     entry: entries,
     output: {
         publicPath: '/',
@@ -182,7 +187,7 @@ const webpackConfig = {
         ...(pkg.locales ? [new webpack.ContextReplacementPlugin(/moment\/locale$/, new RegExp(pkg.locales.join('|')))] : []),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
-        ...(process.env.NODE_ENV === 'development' ? dllsReferences : []),
+        ...(process.env.NODE_ENV === 'development' && !symlinks ? dllsReferences : []),
         new NotifierPlugin({
             title: pkg.name,
             contentImage: pkg.logo,
@@ -266,7 +271,8 @@ if(process.env.NODE_ENV === 'development') {
     webpackConfig.watch = true;
 }
 else {
-    webpackConfig.devtool = 'cheap-module-sourcemap';
+    // webpackConfig.devtool = 'cheap-module-sourcemap';
+    webpackConfig.devtool = false;
 
     webpackConfig.plugins = [
         ...webpackConfig.plugins,
@@ -295,4 +301,4 @@ else {
     }
 }
 
-module.exports = process.env.NODE_ENV === 'development' ? [webpackVendorConfig, webpackConfig] : webpackConfig;
+module.exports = process.env.NODE_ENV === 'development' && !symlinks ? [webpackVendorConfig, webpackConfig] : webpackConfig;

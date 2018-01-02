@@ -17,7 +17,7 @@ const auth = require('koa-basic-auth');
 const sslify = require('koa-sslify');
 const userAgent = require('koa-useragent');
 const puppeteer = require('puppeteer');
-const schedule = require('node-schedule');
+const scheduler = require('node-schedule');
 
 const router = require('koa-router')();
 
@@ -85,7 +85,7 @@ const cacheHeaders = (res, path, stats) => {
     res.setHeader('Cache-Control', 'max-age=' + 3600 * 24 * 7);
 };
 
-router.all('/build*', async ctx => {
+router.all(['/build/*', '/assets/*'], async ctx => {
     await send(ctx, ctx.path, { root: __dirname, setHeaders: cacheHeaders });
 });
 
