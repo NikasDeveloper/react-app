@@ -1,5 +1,5 @@
 const console = require('better-console');
-const pkg = require('../package.json');
+const pkg = require('../package');
 const path = require('path');
 const os = require('os');
 const ip = require('ip');
@@ -18,8 +18,11 @@ const NotifierPlugin = require('webpack-notifier');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const FaviconsPlugin = require('favicons-webpack-plugin');
 
-const symlinks = !!symlinked.names().length;
-console.warn('NPM link\'ed modules found: skipping DLLs');
+const symlinkeds = symlinked.names();
+const symlinks = !!symlinkeds.length;
+
+if(symlinks)
+    console.warn(`NPM link'ed modules found (${symlinkeds}): skipping DLLs`);
 
 const hostConfig = pkg.host[process.env.NODE_ENV] || pkg.host;
 
@@ -184,6 +187,7 @@ const webpackConfig = {
         new webpack.HashedModuleIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.EnvironmentPlugin(['NODE_ENV', 'DEVELOPMENT_ADDRESS']),
+        new webpack.EnvironmentPlugin({ APP_NAME: pkg.name, APP_VERSION: pkg.version }),
         ...(pkg.locales ? [new webpack.ContextReplacementPlugin(/moment\/locale$/, new RegExp(pkg.locales.join('|')))] : []),
         ...entriesHtmlBundles,
         ...entriesHtmlBundlesAssets,
@@ -197,7 +201,7 @@ const webpackConfig = {
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
             openAnalyzer: process.env.NODE_ENV === 'production',
-            generateStatsFile: true,
+            generateStatsFile: process.env.NODE_ENV === 'production',
             defaultSizes: 'gzip',
             reportFilename: 'build/stats.html',
             statsFilename: 'build/stats.json',
